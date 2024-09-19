@@ -16,18 +16,12 @@ class PythonAspectApplicationTest {
     }
 
     @Test
-    public void testDefaultPythonExecution() {
-//        testPythonScript.testPythonFileBeforeMethod();
-//        testPythonScript.testPythonScriptBeforeMethod();
-//        testPythonScript.testPythonFileAfterMethod();
-//        testPythonScript.testPythonScriptAfterMethod();
+    void testDefaultPythonExecution() {
+        testPythonScript.testPythonFileAfterMethod();
     }
 
     @Test
-    public void testPy4JExecution() {
-//        testPythonScript.testPy4JFileBeforeMethod();
-//        testPythonScript.testPy4JScriptBeforeMethod();
-        testPythonScript.testPy4JFileAfterMethod();
-//        testPythonScript.testPy4JScriptAfterMethod();
+    void testPy4JExecution() {
+        testPythonScript.testPy4JScriptAfterMethod();
     }
 }
