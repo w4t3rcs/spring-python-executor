@@ -127,7 +127,7 @@ public class Example {
 ```java
 @Py4JBeforeMethod("print(gateway)") //or @Py4JAfterMethod("print('gateway')")
 // Or @Py4JBeforeMethod("example.py") or @Py4JAfterMethod("example.py")
-public void method() {
+public void doSmth() {
    //Some business-logic
 }
 ```
