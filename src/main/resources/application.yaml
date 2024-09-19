@@ -2,3 +2,5 @@ spring:
   python:
     start-command: python
     log: true
+    py4j:
+      auto-import: true
