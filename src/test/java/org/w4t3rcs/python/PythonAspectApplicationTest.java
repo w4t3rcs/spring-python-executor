@@ -24,4 +24,9 @@ class PythonAspectApplicationTest {
     void testPy4JExecution() {
         testPythonScript.testPy4JScriptAfterMethod();
     }
+
+    @Test
+    void testSpelythonExecution() {
+        testPythonScript.testSpelythonScriptAfterMethod();
+    }
 }

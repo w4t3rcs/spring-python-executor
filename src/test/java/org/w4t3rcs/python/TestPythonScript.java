@@ -3,6 +3,7 @@ package org.w4t3rcs.python;
 import org.springframework.stereotype.Component;
 import org.w4t3rcs.python.metadata.Py4JAfterMethod;
 import org.w4t3rcs.python.metadata.PythonAfterMethod;
+import org.w4t3rcs.python.metadata.SpelythonAfterMethod;
 
 @Component
 public class TestPythonScript {
@@ -13,6 +14,11 @@ public class TestPythonScript {
 
     @Py4JAfterMethod("print(gateway)")
     public void testPy4JScriptAfterMethod() {
+        System.out.println("hello from java");
+    }
+
+    @SpelythonAfterMethod("expression = '${@pythonProperties.toString()}'\nprint(expression)")
+    public void testSpelythonScriptAfterMethod() {
         System.out.println("hello from java");
     }
 }
