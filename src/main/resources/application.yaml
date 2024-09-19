@@ -1,6 +1,0 @@
-spring:
-  python:
-    start-command: python
-    loggable: true
-    py4j:
-      auto-import: true

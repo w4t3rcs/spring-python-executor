@@ -11,7 +11,7 @@ public class TestPythonScript {
         System.out.println("hello from java");
     }
 
-    @Py4JAfterMethod("print(entry_point)")
+    @Py4JAfterMethod("print(gateway)")
     public void testPy4JScriptAfterMethod() {
         System.out.println("hello from java");
     }

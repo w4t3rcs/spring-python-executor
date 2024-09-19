@@ -11,7 +11,7 @@ import java.net.InetAddress;
 
 @UtilityClass
 public class Py4JUtil {
-    public final String IMPORT_PY4J = "from py4j.java_gateway import JavaGateway\ngateway = JavaGateway()\nentry_point = gateway.entry_point\n";
+    public final String IMPORT_PY4J = "from py4j.java_gateway import JavaGateway\ngateway = JavaGateway()\n";
 
     @SneakyThrows
     public GatewayServer createGatewayServer(Object entryPoint, Py4JProperties py4JProperties) {
