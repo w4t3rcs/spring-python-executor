@@ -7,7 +7,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.3</version>
     </parent>
-    <groupId>org.w4t3rcs</groupId>
+    <groupId>io.github.w4t3rcs</groupId>
     <artifactId>spring-python-executor</artifactId>
     <version>${parent.version}</version>
     <packaging>jar</packaging>
