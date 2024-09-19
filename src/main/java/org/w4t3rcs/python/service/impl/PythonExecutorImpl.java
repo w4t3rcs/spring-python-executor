@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.w4t3rcs.python.config.PythonProperties;
 import org.w4t3rcs.python.service.PythonExecutor;
 
 import java.io.BufferedReader;
@@ -18,25 +18,23 @@ import java.io.InputStreamReader;
 @Service
 @RequiredArgsConstructor
 public class PythonExecutorImpl implements PythonExecutor {
-    @Value("${spring.python.start-command}")
-    private String pythonStartCommand;
-    @Value("${spring.python.log}")
-    private boolean isPythonLoggable;
+    private final PythonProperties pythonProperties;
 
     @SneakyThrows
     @Override
     public void execute(String script) {
         ProcessBuilder processBuilder = new ProcessBuilder();
+        String startCommand = pythonProperties.getStartCommand();
         if (script.endsWith(".py")) {
             ClassPathResource classPathResource = new ClassPathResource(script);
-            processBuilder.command(pythonStartCommand, classPathResource.getFile().getAbsolutePath());
+            processBuilder.command(startCommand, classPathResource.getFile().getAbsolutePath());
         } else {
-            processBuilder.command(pythonStartCommand, "-c", script);
+            processBuilder.command(startCommand, "-c", script);
         }
 
         Process process = processBuilder.start();
         int exitCode = process.waitFor();
-        if (isPythonLoggable) {
+        if (pythonProperties.isLoggable()) {
             logPythonCommand(process);
             logPythonError(process);
         }

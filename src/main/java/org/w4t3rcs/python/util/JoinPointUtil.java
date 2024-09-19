@@ -1,4 +1,4 @@
-package org.w4t3rcs.python.aspect;
+package org.w4t3rcs.python.util;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
