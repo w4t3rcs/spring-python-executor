@@ -24,6 +24,8 @@ org.w4t3rcs.python
 │   ├── Py4JProperties            # Configuration properties for Py4J
 │   ├── Py4JRegistrar             # Bean registrar for Py4J
 │   ├── PythonConfig              # Python configuration class
+├── exception
+│   ├── PythonReadingException    # This exception is thrown if PythonExecutor can't read Python process or output
 ├── metadata
 │   ├── Py4JAfterMethod           # Metadata class for after method executions via Py4J
 │   ├── Py4JBeforeMethod          # Metadata class for before method executions via Py4J
@@ -33,10 +35,11 @@ org.w4t3rcs.python
 │   ├── SpelythonBeforeMethod     # Metadata class for before method executions via SpEL + Python script
 ├── service
 │   ├── PythonExecutor            # Service interface for executing Python scripts
-│   ├── SpelythonResolver         # Service interface for resolving all SpEL from Python scripts
+│   ├── PythonCompletionResolver  # Service interface for resolving all SpEL from Python scripts
 │   ├── impl
+│   │───├── Py4JResolver          # Implementation class for auto importing Py4J to Python script
 │   │───├── PythonExecutorImpl    # Implementation class for executing Python scripts
-│   │   └── SpelythonResolverImpl # Implementation class for resolving all SpEL from Python scripts
+│   │   └── SpelythonResolver     # Implementation class for injecting SpEL to Python scripts
 ├── util
 │   ├── JoinPointUtil             # Utility methods for handling join points
 │   ├── Py4JUtil                  # Utility methods for handling py4J

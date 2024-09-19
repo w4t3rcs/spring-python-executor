@@ -2,7 +2,6 @@ package org.w4t3rcs.python.service.impl;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.w4t3rcs.python.config.PythonProperties;
@@ -22,26 +21,29 @@ import java.util.stream.Collectors;
 public class PythonExecutorImpl implements PythonExecutor {
     private final PythonProperties pythonProperties;
 
-    @SneakyThrows
     @Override
     public void execute(String script) {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        String startCommand = pythonProperties.getStartCommand();
-        if (ScriptUtil.isPythonFile(script)) {
-            processBuilder.command(startCommand, ScriptUtil.getScriptPath(script));
-        } else {
-            processBuilder.command(startCommand, "-c", script);
-        }
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            String startCommand = pythonProperties.getStartCommand();
+            if (ScriptUtil.isPythonFile(script)) {
+                processBuilder.command(startCommand, ScriptUtil.getScriptPath(script));
+            } else {
+                processBuilder.command(startCommand, "-c", script);
+            }
 
-        Process process = processBuilder.start();
-        int exitCode = process.waitFor();
-        if (pythonProperties.isLoggable()) {
-            logPythonCommand(process);
-            logPythonError(process);
-        }
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+            if (pythonProperties.isLoggable()) {
+                logPythonCommand(process);
+                logPythonError(process);
+            }
 
-        if (exitCode == 0) log.info("Python script ({}) is executed with code: {}", script, exitCode);
-        else log.error("Something went wrong with python Python script ({}) is executed with code: {}", script, exitCode);
+            if (exitCode == 0) log.info("Python script ({}) is executed with code: {}", script, exitCode);
+            else log.error("Something went wrong with python Python script ({}) is executed with code: {}", script, exitCode);
+        } catch (IOException | InterruptedException e) {
+            throw new PythonReadingException(e);
+        }
     }
 
     private void logPythonCommand(Process process) {
