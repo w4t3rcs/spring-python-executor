@@ -9,21 +9,28 @@
     </parent>
     <groupId>org.w4t3rcs</groupId>
     <artifactId>spring-python-executor</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${parent.version}</version>
+    <packaging>jar</packaging>
     <name>spring-python-executor</name>
     <description>Python scripts executor using Spring AOP</description>
     <url/>
     <licenses>
-        <license/>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
     </licenses>
     <developers>
-        <developer/>
+        <developer>
+            <name>w4t3rcs</name>
+            <email>w4t3rofficial@gmail.com</email>
+        </developer>
     </developers>
     <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
+        <url>https://github.com/w4t3rcs/spring-python-executor</url>
+        <connection>scm:git:git://github.com/w4t3rcs/spring-python-executor.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:w4t3rcs/spring-python-executor.git</developerConnection>
     </scm>
     <properties>
         <java.version>17</java.version>
