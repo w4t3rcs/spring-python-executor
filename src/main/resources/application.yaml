@@ -1,0 +1,4 @@
+spring:
+  python:
+    start-command: python
+    log: true
