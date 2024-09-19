@@ -15,26 +15,31 @@
 ```
 org.w4t3rcs.python
 ├── aspect
-│   ├── Py4JAspect               # Aspect to handle Py4J-based Python execution
-│   ├── PythonCommandAspect      # Aspect for executing Python scripts using ProcessBuilder
+│   ├── Py4JAspect                # Aspect to handle Py4J-based Python execution
+│   ├── PythonCommandAspect       # Aspect for executing Python scripts using ProcessBuilder
+│   ├── SpelythonAspect           # Aspect for executing SPeL + Python scripts using ProcessBuilder
 ├── config
-│   ├── EnablePy4J               # Enable annotation for Py4J configuration
-│   ├── Py4JConfig               # Py4J configuration class
-│   ├── Py4JProperties           # Configuration properties for Py4J
-│   ├── Py4JRegistrar            # Bean registrar for Py4J
-│   ├── PythonConfig             # Python configuration class
+│   ├── EnablePy4J                # Enable annotation for Py4J configuration
+│   ├── Py4JConfig                # Py4J configuration class
+│   ├── Py4JProperties            # Configuration properties for Py4J
+│   ├── Py4JRegistrar             # Bean registrar for Py4J
+│   ├── PythonConfig              # Python configuration class
 ├── metadata
-│   ├── Py4JAfterMethod          # Metadata class for after method executions via Py4J
-│   ├── Py4JBeforeMethod         # Metadata class for before method executions via Py4J
-│   ├── PythonAfterMethod        # Metadata class for after method executions via Python script
-│   ├── PythonBeforeMethod       # Metadata class for before method executions via Python script
+│   ├── Py4JAfterMethod           # Metadata class for after method executions via Py4J
+│   ├── Py4JBeforeMethod          # Metadata class for before method executions via Py4J
+│   ├── PythonAfterMethod         # Metadata class for after method executions via Python script
+│   ├── PythonBeforeMethod        # Metadata class for before method executions via Python script
+│   ├── SpelythonAfterMethod      # Metadata class for after method executions via SpEL + Python script
+│   ├── SpelythonBeforeMethod     # Metadata class for before method executions via SpEL + Python script
 ├── service
-│   ├── PythonExecutor           # Service interface for executing Python scripts
+│   ├── PythonExecutor            # Service interface for executing Python scripts
+│   ├── SpelythonResolver         # Service interface for resolving all SpEL from Python scripts
 │   ├── impl
-│   │   └── PythonExecutorImpl   # Implementation class for executing Python scripts
+│   │───├── PythonExecutorImpl    # Implementation class for executing Python scripts
+│   │   └── SpelythonResolverImpl # Implementation class for resolving all SpEL from Python scripts
 ├── util
-│   ├── JoinPointUtil            # Utility methods for handling join points
-└───└── Py4JUtil                 # Utility methods for handling py4J
+│   ├── JoinPointUtil             # Utility methods for handling join points
+└───└── Py4JUtil                  # Utility methods for handling py4J
 ```
 
 ## Getting Started
@@ -70,7 +75,7 @@ public void doSmth() {
 }
 ```
 3. **Script Calls using `PythonExecutor`**:
-   Use AOP aspects (`PythonCommandAspect`) to inject Python script executions before or after specific method invocations.
+   Use `PythonExecutor` to execute Python script.
 
    An example of Python execution:
 
@@ -87,6 +92,45 @@ public class Example {
    public void doSmth() {
       //Some business-logic
       pythonExecutor.execute("print('hello from python')"); //or pythonExecutor.execute("example.py");
+      //Some business-logic
+   }
+}
+```
+
+- ### Spelython (SPeL + Python)
+1. **Script Calls using AOP**:
+   Use an AOP aspect (`SpelythonAspect`) to inject Python script executions before or after specific method invocations.
+
+   An example of Python execution:
+```java
+@SpelythonBeforeMethod("print('${1 + 1}')") //or @SpelythonAfterMethod("print('${1 + 1}')")
+// Or @SpelythonBeforeMethod("example.py") or @SpelythonAfterMethod("example.py")
+public void doSmth() {
+   //Some business-logic
+}
+```
+2. **Script Calls using `SpelythonResolver` + `PythonExecutor`**:
+   Use `SpelythonResolver` + `PythonExecutor` to execute Python script.
+
+   An example of Python execution:
+
+```java
+@Service
+public class Example {
+   private final PythonExecutor pythonExecutor;
+   private final SpelythonResolver spelythonResolver;
+
+   @Autowired
+   public Example(PythonExecutor pythonExecutor, SpelythonResolver spelythonResolver) {
+      this.pythonExecutor = pythonExecutor;
+      this.spelythonResolver = spelythonResolver;
+   }
+
+   public void doSmth() {
+      //Some business-logic
+      String script = "print('${1 + 1}')";
+      String resolvedScript = spelythonResolver.resolve(script);
+      pythonExecutor.execute(resolvedScript); //or pythonExecutor.execute("example.py");
       //Some business-logic
    }
 }
