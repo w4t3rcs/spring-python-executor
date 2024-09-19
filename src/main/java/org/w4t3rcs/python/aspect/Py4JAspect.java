@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.w4t3rcs.python.metadata.*;
 import org.w4t3rcs.python.service.PythonExecutor;
+import org.w4t3rcs.python.util.Py4JUtil;
 
 import java.lang.reflect.Method;
 
@@ -40,7 +41,7 @@ public class Py4JAspect {
 
     private void executeScript(String script) {
         if (isPy4JAutoImportEnabled && !script.endsWith(".py")) {
-            pythonExecutor.execute(Py4JComponent.importPy4J + script);
+            pythonExecutor.execute(Py4JUtil.IMPORT_PY4J + script);
         } else {
             pythonExecutor.execute(script);
         }

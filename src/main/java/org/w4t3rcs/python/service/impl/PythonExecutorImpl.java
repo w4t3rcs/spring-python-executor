@@ -36,7 +36,11 @@ public class PythonExecutorImpl implements PythonExecutor {
 
         Process process = processBuilder.start();
         int exitCode = process.waitFor();
-        if (isPythonLoggable) logPythonCommand(process);
+        if (isPythonLoggable) {
+            logPythonCommand(process);
+            logPythonError(process);
+        }
+
         if (exitCode == 0) log.info("Python script ({}) is executed with code: {}", script, exitCode);
         else log.warn("Something went wrong with python Python script ({}) is executed with code: {}", script, exitCode);
     }
@@ -44,6 +48,14 @@ public class PythonExecutorImpl implements PythonExecutor {
     private void logPythonCommand(Process process) {
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             bufferedReader.lines().forEach(log::info);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void logPythonError(Process process) {
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+            bufferedReader.lines().forEach(log::warn);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
