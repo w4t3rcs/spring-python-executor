@@ -8,17 +8,17 @@ import org.w4t3rcs.python.metadata.SpelythonAfterMethod;
 @Component
 public class TestPythonScript {
     @PythonAfterMethod("test.py")
-    public void testPythonFileAfterMethod() {
+    public void testPythonAfterMethod() {
         System.out.println("hello from java");
     }
 
-    @Py4JAfterMethod("print(gateway)")
-    public void testPy4JScriptAfterMethod() {
+    @Py4JAfterMethod("test_py4j.py")
+    public void testPy4JAfterMethod() {
         System.out.println("hello from java");
     }
 
     @SpelythonAfterMethod("test_spelython.py")
-    public void testSpelythonScriptAfterMethod() {
+    public void testSpelythonAfterMethod() {
         System.out.println("hello from java");
     }
 }

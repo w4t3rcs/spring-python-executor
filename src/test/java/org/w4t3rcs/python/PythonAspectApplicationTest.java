@@ -17,16 +17,16 @@ class PythonAspectApplicationTest {
 
     @Test
     void testDefaultPythonExecution() {
-        testPythonScript.testPythonFileAfterMethod();
+        testPythonScript.testPythonAfterMethod();
     }
 
     @Test
     void testPy4JExecution() {
-        testPythonScript.testPy4JScriptAfterMethod();
+        testPythonScript.testPy4JAfterMethod();
     }
 
     @Test
     void testSpelythonExecution() {
-        testPythonScript.testSpelythonScriptAfterMethod();
+        testPythonScript.testSpelythonAfterMethod();
     }
 }

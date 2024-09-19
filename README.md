@@ -39,7 +39,8 @@ org.w4t3rcs.python
 │   │   └── SpelythonResolverImpl # Implementation class for resolving all SpEL from Python scripts
 ├── util
 │   ├── JoinPointUtil             # Utility methods for handling join points
-└───└── Py4JUtil                  # Utility methods for handling py4J
+│   ├── Py4JUtil                  # Utility methods for handling py4J
+└───└── ScriptUtil                # Utility methods for handling scripts
 ```
 
 ## Getting Started

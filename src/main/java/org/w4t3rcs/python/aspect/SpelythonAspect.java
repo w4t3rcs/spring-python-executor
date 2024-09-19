@@ -9,8 +9,8 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import org.w4t3rcs.python.metadata.SpelythonAfterMethod;
 import org.w4t3rcs.python.metadata.SpelythonBeforeMethod;
+import org.w4t3rcs.python.service.PythonCompletionResolver;
 import org.w4t3rcs.python.service.PythonExecutor;
-import org.w4t3rcs.python.service.SpelythonResolver;
 import org.w4t3rcs.python.util.JoinPointUtil;
 
 import java.lang.reflect.Method;
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 @RequiredArgsConstructor
 public class SpelythonAspect {
     private final PythonExecutor pythonExecutor;
-    private final SpelythonResolver spelythonResolver;
+    private final PythonCompletionResolver spelythonResolver;
 
     @Before("@annotation(org.w4t3rcs.python.metadata.SpelythonBeforeMethod)")
     public void executeBeforeMethod(JoinPoint joinPoint) {

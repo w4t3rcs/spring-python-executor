@@ -1,5 +1,5 @@
 package org.w4t3rcs.python.service;
 
-public interface SpelythonResolver {
+public interface PythonCompletionResolver {
     String resolve(String script);
 }
