@@ -28,7 +28,7 @@ public class SpelythonAspect {
         Method method = JoinPointUtil.getMethodFromJoinPoint(joinPoint);
         SpelythonBeforeMethod pythonBeforeMethod = method.getAnnotation(SpelythonBeforeMethod.class);
         String script = pythonBeforeMethod.value();
-        executeScript(script);
+        pythonExecutor.execute(spelythonResolver.resolve(script));
     }
 
     @After("@annotation(org.w4t3rcs.python.metadata.SpelythonAfterMethod)")
@@ -36,14 +36,6 @@ public class SpelythonAspect {
         Method method = JoinPointUtil.getMethodFromJoinPoint(joinPoint);
         SpelythonAfterMethod pythonAfterMethod = method.getAnnotation(SpelythonAfterMethod.class);
         String script = pythonAfterMethod.value();
-        executeScript(script);
-    }
-
-    private void executeScript(String script) {
-        if (!script.endsWith(".py")) {
-            pythonExecutor.execute(spelythonResolver.resolve(script));
-        } else {
-            pythonExecutor.execute(script);
-        }
+        pythonExecutor.execute(spelythonResolver.resolve(script));
     }
 }

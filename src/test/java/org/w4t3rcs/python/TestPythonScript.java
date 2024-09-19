@@ -17,7 +17,7 @@ public class TestPythonScript {
         System.out.println("hello from java");
     }
 
-    @SpelythonAfterMethod("expression = '${@pythonProperties.toString()}'\nprint(expression)")
+    @SpelythonAfterMethod("test_spelython.py")
     public void testSpelythonScriptAfterMethod() {
         System.out.println("hello from java");
     }
