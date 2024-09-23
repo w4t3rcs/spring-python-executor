@@ -10,4 +10,5 @@ import org.springframework.stereotype.Component;
 public class PythonProperties {
     private String startCommand = "python";
     private boolean isLoggable = true;
+    private String path = "/python/";
 }

@@ -7,8 +7,9 @@ import io.w4t3rcs.python.service.PythonExecutor;
 import io.w4t3rcs.python.util.JoinPointUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
@@ -31,11 +32,12 @@ public class SpelythonAspect {
         pythonExecutor.execute(spelythonResolver.resolve(script));
     }
 
-    @After("@annotation(io.w4t3rcs.python.metadata.SpelythonAfterMethod)")
-    public void executeAfterMethod(JoinPoint joinPoint) {
+    @SneakyThrows
+    @AfterReturning(pointcut = "@annotation(io.w4t3rcs.python.metadata.SpelythonAfterMethod)", returning = "result")
+    public void executeAfterMethod(JoinPoint joinPoint, Object result) {
         Method method = JoinPointUtil.getMethodFromJoinPoint(joinPoint);
         SpelythonAfterMethod pythonAfterMethod = method.getAnnotation(SpelythonAfterMethod.class);
         String script = pythonAfterMethod.value();
-        pythonExecutor.execute(spelythonResolver.resolve(script));
+        pythonExecutor.execute(spelythonResolver.resolve(script, result));
     }
 }

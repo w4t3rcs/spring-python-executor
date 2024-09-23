@@ -8,10 +8,10 @@
         <version>3.3.3</version>
     </parent>
     <groupId>io.github.w4t3rcs</groupId>
-    <artifactId>spring-python-executor</artifactId>
+    <artifactId>spring-boot-python-executor</artifactId>
     <version>${parent.version}</version>
     <packaging>jar</packaging>
-    <name>spring-python-executor</name>
+    <name>Spring Boot Python Executor</name>
     <description>Python scripts executor using Spring AOP</description>
     <url>https://github.com/w4t3rcs/spring-python-executor</url>
     <licenses>
@@ -45,6 +45,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

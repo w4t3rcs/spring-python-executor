@@ -3,7 +3,7 @@ package io.w4t3rcs.python.service.impl;
 import io.w4t3rcs.python.config.PythonProperties;
 import io.w4t3rcs.python.exception.PythonReadingException;
 import io.w4t3rcs.python.service.PythonExecutor;
-import io.w4t3rcs.python.util.ScriptUtil;
+import io.w4t3rcs.python.service.PythonFileHandler;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PythonExecutorImpl implements PythonExecutor {
+    private final PythonFileHandler pythonFileHandler;
     private final PythonProperties pythonProperties;
 
     @Override
@@ -26,12 +27,13 @@ public class PythonExecutorImpl implements PythonExecutor {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder();
             String startCommand = pythonProperties.getStartCommand();
-            if (ScriptUtil.isPythonFile(script)) {
-                processBuilder.command(startCommand, ScriptUtil.getScriptPath(script));
+            if (pythonFileHandler.isPythonFile(script)) {
+                processBuilder.command(startCommand, pythonFileHandler.getScriptPath(script).toString());
             } else {
                 processBuilder.command(startCommand, "-c", script);
             }
 
+            log.info("Python script is going to be executed");
             Process process = processBuilder.start();
             int exitCode = process.waitFor();
             if (pythonProperties.isLoggable()) {
@@ -40,7 +42,7 @@ public class PythonExecutorImpl implements PythonExecutor {
             }
 
             if (exitCode == 0) log.info("Python script ({}) is executed with code: {}", script, exitCode);
-            else log.error("Something went wrong with python Python script ({}) is executed with code: {}", script, exitCode);
+            else log.error("Something went wrong with Python script ({}) is executed with code: {}", script, exitCode);
         } catch (IOException | InterruptedException e) {
             throw new PythonReadingException(e);
         }

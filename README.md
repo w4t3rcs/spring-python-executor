@@ -2,6 +2,14 @@
 
 **Spring Python Executor** is a Spring Boot AOP-based handler for executing Python code before or after method calls. It leverages Spring AOP, Py4J, and ProcessBuilder to allow seamless integration of Python scripts with Java applications.
 
+```
+<dependency>
+   <groupId>io.github.w4t3rcs</groupId>
+   <artifactId>spring-python-executor</artifactId>
+   <version>3.3.3</version>
+</dependency>
+```
+
 ## Features
 
 - **Aspect-Oriented Programming (AOP):** Execute Python scripts before or after Java method calls.
@@ -34,16 +42,17 @@ org.w4t3rcs.python
 │   ├── SpelythonAfterMethod      # Metadata class for after method executions via SpEL + Python script
 │   ├── SpelythonBeforeMethod     # Metadata class for before method executions via SpEL + Python script
 ├── service
-│   ├── PythonExecutor            # Service interface for executing Python scripts
 │   ├── PythonCompletionResolver  # Service interface for resolving all SpEL from Python scripts
+│   ├── PythonExecutor            # Service interface for executing Python scripts
+│   ├── PythonFileHandler         # Service interface for WRITE/READ operations for .py files
 │   ├── impl
 │   │───├── Py4JResolver          # Implementation class for auto importing Py4J to Python script
 │   │───├── PythonExecutorImpl    # Implementation class for executing Python scripts
+│   │───├── PythonFileHandlerImpl # Implementation class for WRITE/READ operations for .py files
 │   │   └── SpelythonResolver     # Implementation class for injecting SpEL to Python scripts
 ├── util
 │   ├── JoinPointUtil             # Utility methods for handling join points
-│   ├── Py4JUtil                  # Utility methods for handling py4J
-└───└── ScriptUtil                # Utility methods for handling scripts
+└───└── Py4JUtil                  # Utility methods for handling py4J
 ```
 
 ## Getting Started
@@ -102,12 +111,14 @@ public class Example {
 ```
 
 - ### Spelython (SPeL + Python)
+   Script wil contain `import json` at the beginning of it and also for executing SpEL you should use `spel{...}`.
+   After `SpelythonResolver` successfully manipulates with SpEL expressions you will be able to handle results using dictionary.
 1. **Script Calls using AOP**:
    Use an AOP aspect (`SpelythonAspect`) to inject Python script executions before or after specific method invocations.
 
-   An example of Python execution:
+   An example of SpEL injection using `spel{...}`:
 ```java
-@SpelythonBeforeMethod("print('${1 + 1}')") //or @SpelythonAfterMethod("print('${1 + 1}')")
+@SpelythonBeforeMethod("print(spel{@pythonProperties}[startCommand])") //or @SpelythonAfterMethod("print(spel{@pythonProperties}[startCommand])")
 // Or @SpelythonBeforeMethod("example.py") or @SpelythonAfterMethod("example.py")
 public void doSmth() {
    //Some business-logic
@@ -132,7 +143,7 @@ public class Example {
 
    public void doSmth() {
       //Some business-logic
-      String script = "print('${1 + 1}')";
+      String script = "print(spel{@pythonProperties}[startCommand])";
       String resolvedScript = spelythonResolver.resolve(script);
       pythonExecutor.execute(resolvedScript); //or pythonExecutor.execute("example.py");
       //Some business-logic
@@ -168,15 +179,42 @@ public class Example {
    spring.python.py4j.read-timeout=0
    ```
 
-3. **Script Calls**:
+3. **Script Calls using AOP**:
    Use an AOP aspect (`Py4JAspect`) to inject Py4J script executions before or after specific method invocations.
 
    An example of Python execution with Py4J if `spring.python.py4j.auto-import=true` where `gateway` is `JavaGateway` from Py4J:
 ```java
-@Py4JBeforeMethod("print(gateway)") //or @Py4JAfterMethod("print('gateway')")
+@Py4JBeforeMethod("print(gateway)") //or @Py4JAfterMethod("print(gateway)")
 // Or @Py4JBeforeMethod("example.py") or @Py4JAfterMethod("example.py")
 public void doSmth() {
    //Some business-logic
+}
+```
+
+4. **Script Calls using `Py4JResolver` + `PythonExecutor`**:
+   Use `Py4JResolver` + `PythonExecutor` to execute Python script.
+
+   An example of Python execution:
+
+```java
+@Service
+public class Example {
+   private final PythonExecutor pythonExecutor;
+   private final Py4JResolver py4JResolver;
+
+   @Autowired
+   public Example(PythonExecutor pythonExecutor, Py4JResolver py4JResolver) {
+      this.pythonExecutor = pythonExecutor;
+      this.py4JResolver = py4JResolver;
+   }
+
+   public void doSmth() {
+      //Some business-logic
+      String script = "print(gateway)";
+      String resolvedScript = py4JResolver.resolve(script);
+      pythonExecutor.execute(resolvedScript); //or pythonExecutor.execute("example.py");
+      //Some business-logic
+   }
 }
 ```
 
@@ -192,4 +230,5 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## Links
 - [GitHub Repository](https://github.com/w4t3rcs/spring-python-executor)
 - [Py4J Documentation](https://www.py4j.org/)
+- [SpEL Documentation](https://docs.spring.io/spring-framework/docs/3.2.x/spring-framework-reference/html/expressions.html)
 ---
