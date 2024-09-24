@@ -2,16 +2,19 @@
 
 **Spring Python Executor** is a Spring Boot AOP-based handler for executing Python code before or after method calls. It leverages Spring AOP, Py4J, and ProcessBuilder to allow seamless integration of Python scripts with Java applications.
 
+| **Python Executor** | **Spring Boot** |
+|---------------------|-----------------|
+| 1.0.0               | 3.3.3           |
+
 ```
 <dependency>
    <groupId>io.github.w4t3rcs</groupId>
    <artifactId>spring-python-executor</artifactId>
-   <version>3.3.3</version>
+   <version>1.0.0</version>
 </dependency>
 ```
 
 ## Features
-
 - **Aspect-Oriented Programming (AOP):** Execute Python scripts before or after Java method calls.
 - **Py4J Integration:** Use Py4J to interact with Python code directly from Java, enabling deep integration.
 - **ProcessBuilder Integration:** Execute external Python scripts using `ProcessBuilder` to handle Python processes in a Spring Boot environment.
