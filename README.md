@@ -9,7 +9,7 @@
 ```
 <dependency>
    <groupId>io.github.w4t3rcs</groupId>
-   <artifactId>spring-python-executor</artifactId>
+   <artifactId>spring-boot-python-executor</artifactId>
    <version>1.0.0</version>
 </dependency>
 ```
