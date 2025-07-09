@@ -10,7 +10,7 @@
 <dependency>
    <groupId>io.github.w4t3rcs</groupId>
    <artifactId>spring-boot-python-executor</artifactId>
-   <version>1.0.0</version>
+   <version>3.3.3</version>
 </dependency>
 ```
 
