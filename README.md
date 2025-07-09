@@ -76,7 +76,6 @@ org.w4t3rcs.python
    Autoconfiguration for Python:
 ```properties
 spring.python.start-command=python
-spring.python.py4j.loggable=true
 ```
 
 2. **Script Calls using AOP**:
