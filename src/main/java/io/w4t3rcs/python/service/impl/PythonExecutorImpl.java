@@ -26,7 +26,7 @@ public class PythonExecutorImpl implements PythonExecutor {
     public void execute(String script) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder();
-            String startCommand = pythonProperties.getStartCommand();
+            String startCommand = pythonProperties.startCommand();
             if (pythonFileHandler.isPythonFile(script)) {
                 processBuilder.command(startCommand, pythonFileHandler.getScriptPath(script).toString());
             } else {

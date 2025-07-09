@@ -2,13 +2,15 @@ package io.w4t3rcs.python.config;
 
 import io.w4t3rcs.python.util.Py4JUtil;
 import lombok.SneakyThrows;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import py4j.GatewayServer;
 
 @Configuration
-@ConditionalOnProperty(name = "spring.python.py4j.enabled", havingValue = "true")
+@Conditional(Py4JCondition.class)
+@EnableConfigurationProperties({Py4JProperties.class})
 public class Py4JConfig {
     @SneakyThrows
     @Bean

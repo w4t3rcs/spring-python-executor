@@ -69,7 +69,7 @@ public class PythonFileHandlerImpl implements PythonFileHandler {
     @SneakyThrows
     @Override
     public Path getScriptPath(String path) {
-        ClassPathResource classPathResource = new ClassPathResource(pythonProperties.getPath() + path);
+        ClassPathResource classPathResource = new ClassPathResource(pythonProperties.path() + path);
         return classPathResource.getFile().toPath();
     }
 }

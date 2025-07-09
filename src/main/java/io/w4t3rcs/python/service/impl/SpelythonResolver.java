@@ -1,8 +1,10 @@
 package io.w4t3rcs.python.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.w4t3rcs.python.service.PythonCompletionResolver;
+import io.w4t3rcs.python.config.SpelythonProperties;
 import io.w4t3rcs.python.service.PythonFileHandler;
+import io.w4t3rcs.python.service.PythonResolver;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
@@ -13,42 +15,45 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-public class SpelythonResolver implements PythonCompletionResolver {
+public class SpelythonResolver implements PythonResolver {
     private static final String IMPORT_JSON = "import json";
-    private static final String RESULT_EXPRESSION = "#result";
-    private static final Pattern SPEL_PATTERN = Pattern.compile("spel\\{.+}");
     private static final int SPEL_START_DELIMITER_INDEX = 5;
+    private final SpelythonProperties spelythonProperties;
     private final PythonFileHandler pythonFileHandler;
     private final ApplicationContext applicationContext;
     private final ObjectMapper objectMapper;
 
     @SneakyThrows
     @Override
-    public String resolve(String script, Object... args) {
-        Object methodResult;
-        if (args != null && args.length > 0) methodResult = args[0];
-        else methodResult = null;
+    public String resolve(String script, @Nullable Map<String, Object> arguments) {
         if (!pythonFileHandler.isPythonFile(script)) {
-            return resolveSpELExpressions(script, methodResult);
+            return resolveSpELExpressions(script, arguments);
         } else {
-            return pythonFileHandler.readScriptBodyFromFile(script, scriptLine -> resolveSpELExpressions(scriptLine, methodResult));
+            return pythonFileHandler.readScriptBodyFromFile(script, scriptLine -> resolveSpELExpressions(scriptLine, arguments));
         }
     }
 
     @SneakyThrows
-    private String resolveSpELExpressions(String script, Object methodResult) {
+    private String resolveSpELExpressions(String script, @Nullable Map<String, Object> arguments) {
         String resolvedScript = script;
         if (!script.contains(IMPORT_JSON)) resolvedScript = IMPORT_JSON + "\n" + resolvedScript;
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext context = new StandardEvaluationContext();
-        parser.parseExpression(RESULT_EXPRESSION).setValue(context, methodResult);
+        if (arguments != null && !arguments.isEmpty()) {
+            arguments.forEach((key, value) -> {
+                parser.parseExpression("#" + key)
+                        .setValue(context, value);
+            });
+        }
         context.setBeanResolver(new BeanFactoryResolver(applicationContext));
-        Matcher matcher = SPEL_PATTERN.matcher(script);
+        Pattern spelPattern = Pattern.compile(spelythonProperties.regex());
+        Matcher matcher = spelPattern.matcher(script);
         while (matcher.find()) {
             String group = matcher.group();
             String expressionString = group.substring(SPEL_START_DELIMITER_INDEX, group.length() - 1);

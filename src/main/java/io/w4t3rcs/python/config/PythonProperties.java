@@ -1,14 +1,10 @@
 package io.w4t3rcs.python.config;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
-@Data
-@Component
 @ConfigurationProperties("spring.python")
-public class PythonProperties {
-    private String startCommand = "python";
-    private boolean isLoggable = true;
-    private String path = "/python/";
+public record PythonProperties(@DefaultValue("python") String startCommand,
+                               @DefaultValue("true") boolean isLoggable,
+                               @DefaultValue("/python/") String path) {
 }

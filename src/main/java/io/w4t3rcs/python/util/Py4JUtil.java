@@ -15,6 +15,6 @@ public class Py4JUtil {
 
     @SneakyThrows
     public GatewayServer createGatewayServer(Object entryPoint, Py4JProperties py4JProperties) {
-        return new GatewayServer(entryPoint, py4JProperties.getPort(), InetAddress.getByName(py4JProperties.getHost()), py4JProperties.getConnectTimeout(), py4JProperties.getReadTimeout(), null, new CallbackClient(py4JProperties.getPythonPort(), InetAddress.getByName(py4JProperties.getHost())), ServerSocketFactory.getDefault());
+        return new GatewayServer(entryPoint, py4JProperties.port(), InetAddress.getByName(py4JProperties.host()), py4JProperties.connectTimeout(), py4JProperties.readTimeout(), null, new CallbackClient(py4JProperties.pythonPort(), InetAddress.getByName(py4JProperties.host())), ServerSocketFactory.getDefault());
     }
 }

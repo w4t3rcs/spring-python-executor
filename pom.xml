@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.w4t3rcs</groupId>
     <artifactId>spring-boot-python-executor</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
     <name>Spring Boot Python Executor</name>
     <description>Python scripts executor using Spring AOP</description>
@@ -35,7 +35,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -121,5 +120,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

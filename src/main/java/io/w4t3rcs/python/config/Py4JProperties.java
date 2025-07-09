@@ -1,18 +1,14 @@
 package io.w4t3rcs.python.config;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import py4j.GatewayServer;
 
-@Data
-@Component
 @ConfigurationProperties("spring.python.py4j")
-public class Py4JProperties {
-    private boolean autoImport = true;
-    private String host = GatewayServer.DEFAULT_ADDRESS;
-    private int port = GatewayServer.DEFAULT_PORT;
-    private int pythonPort = GatewayServer.DEFAULT_PYTHON_PORT;
-    private int connectTimeout = GatewayServer.DEFAULT_CONNECT_TIMEOUT;
-    private int readTimeout = GatewayServer.DEFAULT_READ_TIMEOUT;
+public record Py4JProperties(@DefaultValue("true") boolean autoImport,
+                             @DefaultValue(GatewayServer.DEFAULT_ADDRESS) String host,
+                             @DefaultValue("25333") int port,
+                             @DefaultValue("25334") int pythonPort,
+                             @DefaultValue("0") int connectTimeout,
+                             @DefaultValue("0") int readTimeout) {
 }

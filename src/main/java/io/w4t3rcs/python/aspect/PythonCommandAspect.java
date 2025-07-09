@@ -21,14 +21,14 @@ public class PythonCommandAspect {
 
     @Before("@annotation(io.w4t3rcs.python.metadata.PythonBeforeMethod)")
     public void executeBeforeMethod(JoinPoint joinPoint) {
-        Method method = JoinPointUtil.getMethodFromJoinPoint(joinPoint);
+        Method method = JoinPointUtil.getMethod(joinPoint);
         PythonBeforeMethod pythonBeforeMethod = method.getAnnotation(PythonBeforeMethod.class);
         pythonExecutor.execute(pythonBeforeMethod.value());
     }
 
     @After("@annotation(io.w4t3rcs.python.metadata.PythonAfterMethod)")
     public void executeAfterMethod(JoinPoint joinPoint) {
-        Method method = JoinPointUtil.getMethodFromJoinPoint(joinPoint);
+        Method method = JoinPointUtil.getMethod(joinPoint);
         PythonAfterMethod pythonAfterMethod = method.getAnnotation(PythonAfterMethod.class);
         pythonExecutor.execute(pythonAfterMethod.value());
     }
