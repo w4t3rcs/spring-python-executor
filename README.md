@@ -4,13 +4,15 @@
 
 | **Python Executor** | **Spring Boot** |
 |---------------------|-----------------|
-| 3.3.3               | 3.3.3           |
+| 1.1.0               | 3.3.3           |
+|---------------------|-----------------|
+| 1.0.0               | 3.3.3           |
 
 ```
 <dependency>
    <groupId>io.github.w4t3rcs</groupId>
    <artifactId>spring-boot-python-executor</artifactId>
-   <version>3.3.3</version>
+   <version>1.1.0</version>
 </dependency>
 ```
 
