@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface SpelythonBeforeMethod {
+public @interface PythonBefore {
     String value() default "";
 }

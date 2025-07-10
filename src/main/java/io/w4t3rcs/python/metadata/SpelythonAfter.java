@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Py4JAfterMethod {
+public @interface SpelythonAfter {
     String value() default "";
 }
