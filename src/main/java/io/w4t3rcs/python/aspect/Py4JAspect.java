@@ -1,5 +1,6 @@
 package io.w4t3rcs.python.aspect;
 
+import io.w4t3rcs.python.config.Py4JCondition;
 import io.w4t3rcs.python.metadata.Py4JAfter;
 import io.w4t3rcs.python.metadata.Py4JBefore;
 import io.w4t3rcs.python.service.PythonExecutor;
@@ -11,10 +12,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
+@Conditional(Py4JCondition.class)
 public class Py4JAspect {
     private final PythonExecutor pythonExecutor;
     private final PythonResolver py4JResolver;
