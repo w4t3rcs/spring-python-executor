@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Service
+@Service("py4JResolver")
 @RequiredArgsConstructor
 public class Py4JResolver implements PythonResolver {
     private final PythonFileHandler pythonFileHandler;

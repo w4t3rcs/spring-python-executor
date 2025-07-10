@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service
+@Service("spelythonResolver")
 @RequiredArgsConstructor
 public class SpelythonResolver implements PythonResolver {
     private static final String IMPORT_JSON = "import json";

@@ -5,23 +5,29 @@ import io.w4t3rcs.python.metadata.SpelythonBefore;
 import io.w4t3rcs.python.service.PythonExecutor;
 import io.w4t3rcs.python.service.PythonResolver;
 import io.w4t3rcs.python.util.AspectUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class SpelythonAspect {
     private final PythonExecutor pythonExecutor;
     private final PythonResolver spelythonResolver;
+
+    @Autowired
+    public SpelythonAspect(PythonExecutor pythonExecutor, @Qualifier("spelythonResolver") PythonResolver spelythonResolver) {
+        this.pythonExecutor = pythonExecutor;
+        this.spelythonResolver = spelythonResolver;
+    }
 
     @SneakyThrows
     @Before("@annotation(io.w4t3rcs.python.metadata.SpelythonBefore)")
