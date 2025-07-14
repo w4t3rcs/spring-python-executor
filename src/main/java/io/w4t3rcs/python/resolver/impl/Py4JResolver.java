@@ -10,6 +10,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * Resolver implementation that processes Python scripts for Py4J integration.
+ * This resolver adds the necessary import statement to Python scripts to enable
+ * communication between Java and Python using the Py4J bridge.
+ * 
+ * <p>The resolver can process both inline scripts and scripts loaded from files.</p>
+ * 
+ * <p>This resolver is conditionally enabled based on the {@link Py4JCondition}.</p>
+ */
 @Service("py4JResolver")
 @Conditional(Py4JCondition.class)
 @RequiredArgsConstructor

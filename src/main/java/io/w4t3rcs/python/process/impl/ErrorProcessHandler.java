@@ -9,6 +9,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link ProcessHandler} interface that handles error output from processes.
+ * This class reads the error stream of a process, logs any error messages, and returns null.
+ * It is typically used to capture and log error messages from Python script execution.
+ */
 @Slf4j
 @Service
 public class ErrorProcessHandler implements ProcessHandler<Void> {

@@ -12,9 +12,37 @@ import py4j.GatewayServer;
 
 import java.util.Arrays;
 
+/**
+ * Condition implementation that determines whether Py4J integration should be enabled.
+ * This condition checks both the application properties and the presence of the
+ * {@link EnablePy4J} annotation to decide if Py4J-related beans should be created.
+ * 
+ * <p>The condition also verifies that the Py4J library is available on the classpath.</p>
+ */
 public class Py4JCondition implements Condition {
+    /**
+     * The property name in application properties that can be used to enable Py4J integration.
+     * Setting this property to "true" will enable Py4J integration.
+     */
     public static final String ENABLED_PROPERTY = "spring.python.py4j.enabled";
 
+    /**
+     * Determines if the condition matches, which means Py4J integration should be enabled.
+     * The condition matches if:
+     * <ul>
+     *   <li>The Py4J library is available on the classpath</li>
+     *   <li>AND either:
+     *     <ul>
+     *       <li>The "spring.python.py4j.enabled" property is set to "true"</li>
+     *       <li>OR the {@link EnablePy4J} annotation is present on a configuration class</li>
+     *     </ul>
+     *   </li>
+     * </ul>
+     *
+     * @param context The condition context
+     * @param metadata Metadata about the annotated type
+     * @return true if Py4J integration should be enabled, false otherwise
+     */
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         try {
@@ -28,7 +56,8 @@ public class Py4JCondition implements Condition {
                     .map(BeanDefinition::getSource)
                     .filter(StandardMethodMetadata.class::isInstance)
                     .map(StandardMethodMetadata.class::cast)
-                    .anyMatch(methodMetadata -> methodMetadata.isAnnotated(EnablePy4J.class.getName()));            return (isEnabledViaProperty || isEnabledViaAnnotation);
+                    .anyMatch(methodMetadata -> methodMetadata.isAnnotated(EnablePy4J.class.getName()));
+            return (isEnabledViaProperty || isEnabledViaAnnotation);
         } catch (Exception e) {
             return false;
         }

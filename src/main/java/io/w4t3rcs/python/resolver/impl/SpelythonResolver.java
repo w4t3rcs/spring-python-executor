@@ -18,6 +18,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * Resolver implementation that processes Spring Expression Language (SpEL) expressions
+ * within Python scripts. This resolver allows embedding SpEL expressions in Python code
+ * which are evaluated at runtime and replaced with their JSON representation.
+ * 
+ * <p>The resolver can process both inline scripts and scripts loaded from files.</p>
+ */
 @Service("spelythonResolver")
 @RequiredArgsConstructor
 public class SpelythonResolver implements PythonResolver {
@@ -35,6 +42,19 @@ public class SpelythonResolver implements PythonResolver {
         }
     }
 
+    /**
+     * Processes a script to find and evaluate SpEL expressions, replacing them with their
+     * JSON representation that can be used in Python.
+     * 
+     * <p>This method sets up a SpEL evaluation context with the provided arguments,
+     * evaluates expressions found in the script using the configured regex pattern,
+     * and converts the results to JSON format.</p>
+     *
+     * @param script The Python script content to process
+     * @param arguments A map of variables to be made available in the SpEL evaluation context
+     * @return The processed script with SpEL expressions replaced by their evaluated JSON values
+     * @throws SpelythonProcessingException If there's an error processing the JSON result
+     */
     private String resolveSpELExpressions(String script, Map<String, Object> arguments) {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext context = new StandardEvaluationContext();

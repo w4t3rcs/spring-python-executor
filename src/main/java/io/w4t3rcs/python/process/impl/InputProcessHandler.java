@@ -12,6 +12,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Implementation of the {@link ProcessHandler} interface that handles standard output from processes.
+ * This class reads the standard output stream of a process, extracts result data marked with
+ * a specific prefix, and optionally logs all output lines.
+ * 
+ * <p>It is typically used to capture the results of Python script execution.</p>
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

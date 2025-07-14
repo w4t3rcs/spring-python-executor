@@ -5,8 +5,30 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to execute a Python script before a method.
+ * 
+ * <p>When a method is annotated with {@code PythonBefore}, the specified Python script
+ * will be executed before the method is called. Unlike {@link Py4JBefore}, this annotation
+ * does not use the Py4J bridge, so the Python script cannot directly interact with
+ * Java objects.</p>
+ * 
+ * <p>Example usage:</p>
+ * <pre>
+ * &#64;PythonBefore("my_script.py")
+ * public void myMethod() {
+ *     // Method implementation
+ * }
+ * </pre>
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface PythonBefore {
-    String value() default "";
+    /**
+     * The Python script to execute before the method.
+     * This can be either the path to a Python file or the actual Python code.
+     * 
+     * @return the Python script or file path
+     */
+    String value();
 }

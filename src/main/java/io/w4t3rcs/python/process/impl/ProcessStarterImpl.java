@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+/**
+ * Implementation of the {@link ProcessStarter} interface that starts Python processes.
+ * This class is responsible for creating and starting Python processes either from
+ * script files or from inline Python code.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

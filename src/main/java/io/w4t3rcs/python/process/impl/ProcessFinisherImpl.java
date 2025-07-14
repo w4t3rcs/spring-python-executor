@@ -4,6 +4,11 @@ import io.w4t3rcs.python.process.ProcessFinisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the {@link ProcessFinisher} interface that logs process completion.
+ * This class checks the exit code of the process and logs appropriate messages
+ * based on whether the process completed successfully or with errors.
+ */
 @Slf4j
 @Service
 public class ProcessFinisherImpl implements ProcessFinisher {
@@ -12,5 +17,6 @@ public class ProcessFinisherImpl implements ProcessFinisher {
         int exitCode = process.exitValue();
         if (exitCode == 0) log.info("Python script is executed with code: {}", exitCode);
         else log.error("Something went wrong! Python script is executed with code: {}", exitCode);
+        process.destroy();
     }
 }

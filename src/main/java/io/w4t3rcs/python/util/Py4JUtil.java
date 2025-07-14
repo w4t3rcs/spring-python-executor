@@ -10,8 +10,23 @@ import javax.net.ServerSocketFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * Utility class providing helper methods for Py4J integration.
+ * This class contains methods for creating and configuring Py4J gateway servers,
+ * which enable communication between Java and Python.
+ */
 @UtilityClass
 public class Py4JUtil {
+    /**
+     * Creates a new Py4J gateway server with the specified entry point and properties.
+     * The gateway server allows Python code to access Java objects through the Py4J bridge.
+     *
+     * @param entryPoint The Java object that will be the entry point for Python code
+     * @param py4JProperties Configuration properties for the Py4J gateway
+     * @return A configured GatewayServer instance ready to be started
+     * @throws GatewayCreationException if there's an error creating the gateway server,
+     *         such as an unknown host
+     */
     public GatewayServer createGatewayServer(Object entryPoint, Py4JProperties py4JProperties) {
         try {
             return new GatewayServer(entryPoint,

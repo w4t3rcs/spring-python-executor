@@ -10,6 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the {@link PythonExecutor} interface that executes Python scripts.
+ * This class coordinates the process of starting a Python process, handling its input
+ * and error streams, and converting the result to the specified Java type.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
