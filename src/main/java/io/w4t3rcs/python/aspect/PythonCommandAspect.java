@@ -1,8 +1,8 @@
 package io.w4t3rcs.python.aspect;
 
+import io.w4t3rcs.python.executor.PythonExecutor;
 import io.w4t3rcs.python.metadata.PythonAfter;
 import io.w4t3rcs.python.metadata.PythonBefore;
-import io.w4t3rcs.python.service.PythonExecutor;
 import io.w4t3rcs.python.util.AspectUtil;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
@@ -19,17 +19,15 @@ public class PythonCommandAspect {
 
     @Before("@annotation(io.w4t3rcs.python.metadata.PythonBefore)")
     public void executeBeforeMethod(JoinPoint joinPoint) {
-        AspectUtil.executePython(joinPoint, PythonBefore.class, pythonExecutor,
+        AspectUtil.handlePythonAnnotation(joinPoint, PythonBefore.class, pythonExecutor,
                 PythonBefore::value,
-                point -> null,
-                (script, arguments) -> script);
+                point -> null);
     }
 
     @After("@annotation(io.w4t3rcs.python.metadata.PythonAfter)")
     public void executeAfterMethod(JoinPoint joinPoint) {
-        AspectUtil.executePython(joinPoint, PythonAfter.class, pythonExecutor,
+        AspectUtil.handlePythonAnnotation(joinPoint, PythonAfter.class, pythonExecutor,
                 PythonAfter::value,
-                point -> null,
-                (script, arguments) -> script);
+                point -> null);
     }
 }

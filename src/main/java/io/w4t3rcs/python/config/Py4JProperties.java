@@ -5,10 +5,11 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 import py4j.GatewayServer;
 
 @ConfigurationProperties("spring.python.py4j")
-public record Py4JProperties(@DefaultValue("true") boolean autoImport,
+public record Py4JProperties(@DefaultValue("from py4j.java_gateway import JavaGateway\ngateway = JavaGateway()\n") String importLine,
                              @DefaultValue(GatewayServer.DEFAULT_ADDRESS) String host,
                              @DefaultValue("25333") int port,
                              @DefaultValue("25334") int pythonPort,
                              @DefaultValue("0") int connectTimeout,
-                             @DefaultValue("0") int readTimeout) {
+                             @DefaultValue("0") int readTimeout,
+                             @DefaultValue("true") boolean isLoggable) {
 }

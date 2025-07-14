@@ -1,7 +1,7 @@
-package io.w4t3rcs.python.service.impl;
+package io.w4t3rcs.python.file.impl;
 
 import io.w4t3rcs.python.config.PythonProperties;
-import io.w4t3rcs.python.service.PythonFileHandler;
+import io.w4t3rcs.python.file.PythonFileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.ClassPathResource;

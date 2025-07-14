@@ -1,11 +1,11 @@
 package io.w4t3rcs.python.aspect;
 
+import io.w4t3rcs.python.executor.PythonExecutor;
 import io.w4t3rcs.python.metadata.SpelythonAfter;
 import io.w4t3rcs.python.metadata.SpelythonBefore;
-import io.w4t3rcs.python.service.PythonExecutor;
-import io.w4t3rcs.python.service.PythonResolver;
+import io.w4t3rcs.python.metadata.SpelythonParam;
+import io.w4t3rcs.python.resolver.PythonResolver;
 import io.w4t3rcs.python.util.AspectUtil;
-import lombok.SneakyThrows;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -29,28 +29,29 @@ public class SpelythonAspect {
         this.spelythonResolver = spelythonResolver;
     }
 
-    @SneakyThrows
     @Before("@annotation(io.w4t3rcs.python.metadata.SpelythonBefore)")
     public void executeBeforeMethod(JoinPoint joinPoint) {
-        AspectUtil.executePython(joinPoint, SpelythonBefore.class, pythonExecutor, SpelythonBefore::value, AspectUtil::getMethodParameters, spelythonResolver::resolve);
+        AspectUtil.handlePythonAnnotation(joinPoint, SpelythonBefore.class, pythonExecutor, SpelythonBefore::value,
+                point -> AspectUtil.getMethodParameters(point, SpelythonParam.class, SpelythonParam::value),
+                spelythonResolver);
     }
 
-    @SneakyThrows
     @After("@annotation(io.w4t3rcs.python.metadata.SpelythonAfter)")
     public void executeAfterMethod(JoinPoint joinPoint) {
-        AspectUtil.executePython(joinPoint, SpelythonAfter.class, pythonExecutor, SpelythonAfter::value, AspectUtil::getMethodParameters, spelythonResolver::resolve);
+        AspectUtil.handlePythonAnnotation(joinPoint, SpelythonAfter.class, pythonExecutor, SpelythonAfter::value,
+                point -> AspectUtil.getMethodParameters(point, SpelythonParam.class, SpelythonParam::value),
+                spelythonResolver);
     }
 
-    @SneakyThrows
     @AfterReturning(pointcut = "@annotation(io.w4t3rcs.python.metadata.SpelythonAfter)", returning = "result")
     public void executeAfterReturningMethod(JoinPoint joinPoint, Object result) {
-        AspectUtil.executePython(joinPoint, SpelythonAfter.class, pythonExecutor,
+        AspectUtil.handlePythonAnnotation(joinPoint, SpelythonAfter.class, pythonExecutor,
                 SpelythonAfter::value,
                 point -> {
-                    Map<String, Object> arguments = AspectUtil.getMethodParameters(point);
+                    Map<String, Object> arguments = AspectUtil.getMethodParameters(point, SpelythonParam.class, SpelythonParam::value);
                     arguments.put("result", result);
                     return arguments;
                 },
-                spelythonResolver::resolve);
+                spelythonResolver);
     }
 }

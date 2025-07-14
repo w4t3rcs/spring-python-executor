@@ -1,7 +1,6 @@
 package io.w4t3rcs.python.config;
 
 import io.w4t3rcs.python.util.Py4JUtil;
-import lombok.SneakyThrows;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -12,10 +11,9 @@ import py4j.GatewayServer;
 @Conditional(Py4JCondition.class)
 @EnableConfigurationProperties({Py4JProperties.class})
 public class Py4JConfig {
-    @SneakyThrows
     @Bean
     public GatewayServer py4JGatewayServer(Py4JProperties py4JProperties) {
-        GatewayServer.turnAllLoggingOn();
+        if (py4JProperties.isLoggable()) GatewayServer.turnAllLoggingOn();
         GatewayServer gatewayServer = Py4JUtil.createGatewayServer(null, py4JProperties);
         gatewayServer.start();
         return gatewayServer;
