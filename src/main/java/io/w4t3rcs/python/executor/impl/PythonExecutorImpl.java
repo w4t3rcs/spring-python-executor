@@ -1,7 +1,7 @@
 package io.w4t3rcs.python.executor.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.w4t3rcs.python.exception.ProcessInterruptedException;
+import io.w4t3rcs.python.exception.PythonProcessExecutionException;
 import io.w4t3rcs.python.executor.PythonExecutor;
 import io.w4t3rcs.python.process.ProcessFinisher;
 import io.w4t3rcs.python.process.ProcessHandler;
@@ -33,9 +33,9 @@ public class PythonExecutorImpl implements PythonExecutor {
             String jsonResult = inputProcessHandler.handle(process);
             errorProcessHandler.handle(process);
             processFinisher.finish(process);
-            return jsonResult != null ? objectMapper.convertValue(jsonResult, resultClass) : null;
-        } catch (InterruptedException e) {
-            throw new ProcessInterruptedException(e);
+            return jsonResult != null ? objectMapper.readValue(jsonResult, resultClass) : null;
+        } catch (Exception e) {
+            throw new PythonProcessExecutionException(e);
         }
     }
 }

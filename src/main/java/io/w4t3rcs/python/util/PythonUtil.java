@@ -59,7 +59,7 @@ public class PythonUtil {
         if (!script.contains(IMPORT_JSON)) resolvedScript.insert(0, IMPORT_JSON);
         Pattern spelPattern = Pattern.compile(regex);
         Matcher matcher = spelPattern.matcher(resolvedScript);
-        if (matcher.find()) {
+        while (matcher.find()) {
             String group = matcher.group();
             String expressionString = group.substring(positionFromStart, group.length() - positionFromEnd);
             String result = bodyMapper.apply(matcher, expressionString);

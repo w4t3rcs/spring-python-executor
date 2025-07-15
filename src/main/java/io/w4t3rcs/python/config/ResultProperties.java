@@ -10,8 +10,8 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  * <p>Properties are bound from the application configuration using the prefix "spring.python.result".</p>
  */
 @ConfigurationProperties("spring.python.result")
-public record ResultProperties(@DefaultValue("o4java$\\{.+?}") String regex,
-                               @DefaultValue("r4java$") String appearance,
-                               @DefaultValue("8") int positionFromStart,
+public record ResultProperties(@DefaultValue("o4java\\{.+?}") String regex,
+                               @DefaultValue("r4java") String appearance,
+                               @DefaultValue("7") int positionFromStart,
                                @DefaultValue("1") int positionFromEnd) {
 }

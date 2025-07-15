@@ -156,18 +156,18 @@ spring.python.py4j.loggable=true
 Spelython combines Spring Expression Language (SpEL) with Python, allowing dynamic expression evaluation:
 
 ```properties
-spring.python.spelython.regex=spel\\{.+?}
+spring.python.spelython.regex=spel\{.+?}
 spring.python.spelython.spel-local-variable-index=#
 spring.python.spelython.spel-position-from-start=5
 spring.python.spelython.spel-position-from-end=1
 ```
 
-| Property                    | Description                                             | Default       |
-|-----------------------------|---------------------------------------------------------|---------------|
-| `regex`                     | Regular expression pattern to identify SpEL expressions | `spel\\{.+?}` |
-| `spel-local-variable-index` | Prefix for local variable references                    | `#`           |
-| `spel-position-from-start`  | Characters to skip from start of matched pattern        | `5`           |
-| `spel-position-from-end`    | Characters to skip from end of matched pattern          | `1`           |
+| Property                    | Description                                             | Default      |
+|-----------------------------|---------------------------------------------------------|--------------|
+| `regex`                     | Regular expression pattern to identify SpEL expressions | `spel\{.+?}` |
+| `spel-local-variable-index` | Prefix for local variable references                    | `#`          |
+| `spel-position-from-start`  | Characters to skip from start of matched pattern        | `5`          |
+| `spel-position-from-end`    | Characters to skip from end of matched pattern          | `1`          |
 
 > **Example**: With default settings, the expression `spel{@service.getValue()}` would extract `@service.getValue()` for evaluation.
 
@@ -176,20 +176,20 @@ spring.python.spelython.spel-position-from-end=1
 Spring Boot Python Executor allows retrieving an object from a Python script as a JSON parsed object
 
 ```properties
-spring.python.result.regex=o4java$\\{.+?}
-spring.python.result.appearance=r4java$
-spring.python.result.position-from-start=8
+spring.python.result.regex=o4java\{.+?}
+spring.python.result.appearance=r4java
+spring.python.result.position-from-start=7
 spring.python.result.position-from-end=1
 ```
 
-| Property              | Description                                                                   | Default          |
-|-----------------------|-------------------------------------------------------------------------------|------------------|
-| `regex`               | Regular expression pattern to identify script result expression               | `o4java$\\{.+?}` |
-| `appearance`          | Special identifier for result object in the output of Python script execution | `r4java$`        |
-| `position-from-start` | Characters to skip from start of matched pattern                              | `5`              |
-| `position-from-end`   | Characters to skip from end of matched pattern                                | `1`              |
+| Property              | Description                                                                   | Default        |
+|-----------------------|-------------------------------------------------------------------------------|----------------|
+| `regex`               | Regular expression pattern to identify script result expression               | `o4java\{.+?}` |
+| `appearance`          | Special identifier for result object in the output of Python script execution | `r4java`       |
+| `position-from-start` | Characters to skip from start of matched pattern                              | `7`            |
+| `position-from-end`   | Characters to skip from end of matched pattern                                | `1`            |
 
-> **Example**: With default settings, the expression `o4java${myPythonVariable}` would extract `myPythonVariable` as the result of the Python script.
+> **Example**: With default settings, the expression `o4java{myPythonVariable}` would extract `myPythonVariable` as the result of the Python script.
 
 ## Usage
 
