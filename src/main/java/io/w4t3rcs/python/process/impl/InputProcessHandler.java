@@ -35,7 +35,7 @@ public class InputProcessHandler implements ProcessHandler<String> {
                     String resultJson = line.replace(resultProperties.appearance(), "");
                     result.set(resultJson);
                 }
-                if (pythonProperties.isLoggable()) {
+                if (pythonProperties.loggable()) {
                     log.info(line);
                 }
             });

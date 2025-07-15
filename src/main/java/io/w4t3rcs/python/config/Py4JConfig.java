@@ -30,7 +30,7 @@ public class Py4JConfig {
      */
     @Bean
     public GatewayServer py4JGatewayServer(Py4JProperties py4JProperties) {
-        if (py4JProperties.isLoggable()) GatewayServer.turnAllLoggingOn();
+        if (py4JProperties.loggable()) GatewayServer.turnAllLoggingOn();
         GatewayServer gatewayServer = Py4JUtil.createGatewayServer(null, py4JProperties);
         gatewayServer.start();
         return gatewayServer;

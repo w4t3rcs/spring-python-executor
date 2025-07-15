@@ -11,6 +11,6 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  */
 @ConfigurationProperties("spring.python")
 public record PythonProperties(@DefaultValue("python") String startCommand,
-                               @DefaultValue("true") boolean isLoggable,
+                               @DefaultValue("true") boolean loggable,
                                @DefaultValue("/python/") String path) {
 }

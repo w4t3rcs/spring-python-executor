@@ -17,5 +17,5 @@ public record Py4JProperties(@DefaultValue("from py4j.java_gateway import JavaGa
                              @DefaultValue("25334") int pythonPort,
                              @DefaultValue("0") int connectTimeout,
                              @DefaultValue("0") int readTimeout,
-                             @DefaultValue("true") boolean isLoggable) {
+                             @DefaultValue("true") boolean loggable) {
 }
