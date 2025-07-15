@@ -114,7 +114,6 @@ Spring Python Executor uses Spring Boot's property-based configuration system. A
 These core settings control how Python is executed in your application:
 
 ```properties
-# Python configuration
 spring.python.start-command=python
 spring.python.path=/python/
 spring.python.loggable=true
@@ -131,7 +130,6 @@ spring.python.loggable=true
 Py4J enables bidirectional calls between Java and Python. Configure it with these properties:
 
 ```properties
-# Py4J configuration
 spring.python.py4j.enabled=true
 spring.python.py4j.import-line=from py4j.java_gateway import JavaGateway\ngateway = JavaGateway()
 spring.python.py4j.host=127.0.0.1
@@ -152,12 +150,12 @@ spring.python.py4j.loggable=true
 | `connect-timeout` | Connection timeout in milliseconds  | `0` (no timeout)                                                     |
 | `read-timeout`    | Read timeout in milliseconds        | `0` (no timeout)                                                     |
 | `loggable`        | Whether to log Py4J logs            | `true`                                                               |
+
 ### Spelython Configuration
 
 Spelython combines Spring Expression Language (SpEL) with Python, allowing dynamic expression evaluation:
 
 ```properties
-# Spelython configuration
 spring.python.spelython.regex=spel\\{.+?}
 spring.python.spelython.spel-local-variable-index=#
 spring.python.spelython.spel-position-from-start=5
@@ -178,7 +176,6 @@ spring.python.spelython.spel-position-from-end=1
 Spring Boot Python Executor allows retrieving an object from a Python script as a JSON parsed object
 
 ```properties
-# Spelython configuration
 spring.python.result.regex=o4java$\\{.+?}
 spring.python.result.appearance=r4java$
 spring.python.result.position-from-start=8
