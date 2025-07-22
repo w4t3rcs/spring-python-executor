@@ -1,9 +1,9 @@
-package io.w4t3rcs.python.process.impl;
+package io.w4t3rcs.python.local.impl;
 
 import io.w4t3rcs.python.config.PythonExecutorProperties;
 import io.w4t3rcs.python.exception.ProcessStartException;
 import io.w4t3rcs.python.file.PythonFileHandler;
-import io.w4t3rcs.python.process.ProcessStarter;
+import io.w4t3rcs.python.local.ProcessStarter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

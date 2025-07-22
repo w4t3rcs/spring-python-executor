@@ -1,4 +1,4 @@
-package io.w4t3rcs.python.process;
+package io.w4t3rcs.python.local;
 
 /**
  * Interface defining the contract for handling processes.

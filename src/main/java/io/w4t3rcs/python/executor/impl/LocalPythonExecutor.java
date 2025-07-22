@@ -3,9 +3,9 @@ package io.w4t3rcs.python.executor.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.w4t3rcs.python.exception.PythonScriptExecutionException;
 import io.w4t3rcs.python.executor.PythonExecutor;
-import io.w4t3rcs.python.process.ProcessFinisher;
-import io.w4t3rcs.python.process.ProcessHandler;
-import io.w4t3rcs.python.process.ProcessStarter;
+import io.w4t3rcs.python.local.ProcessFinisher;
+import io.w4t3rcs.python.local.ProcessHandler;
+import io.w4t3rcs.python.local.ProcessStarter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

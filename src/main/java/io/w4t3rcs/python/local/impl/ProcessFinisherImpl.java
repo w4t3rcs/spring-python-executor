@@ -1,6 +1,6 @@
-package io.w4t3rcs.python.process.impl;
+package io.w4t3rcs.python.local.impl;
 
-import io.w4t3rcs.python.process.ProcessFinisher;
+import io.w4t3rcs.python.local.ProcessFinisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

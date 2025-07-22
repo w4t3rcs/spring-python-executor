@@ -1,7 +1,7 @@
-package io.w4t3rcs.python.process.impl;
+package io.w4t3rcs.python.local.impl;
 
 import io.w4t3rcs.python.exception.PythonReadingException;
-import io.w4t3rcs.python.process.ProcessHandler;
+import io.w4t3rcs.python.local.ProcessHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
