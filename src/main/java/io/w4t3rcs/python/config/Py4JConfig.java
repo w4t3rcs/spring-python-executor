@@ -1,11 +1,20 @@
 package io.w4t3rcs.python.config;
 
-import io.w4t3rcs.python.util.Py4JUtil;
+import io.w4t3rcs.python.exception.GatewayCreationException;
+import io.w4t3rcs.python.file.PythonFileHandler;
+import io.w4t3rcs.python.resolver.PythonResolver;
+import io.w4t3rcs.python.resolver.impl.Py4JResolver;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import py4j.CallbackClient;
 import py4j.GatewayServer;
+
+import javax.net.ServerSocketFactory;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Configuration class for Py4J integration.
@@ -19,20 +28,29 @@ import py4j.GatewayServer;
 @Conditional(Py4JCondition.class)
 @EnableConfigurationProperties({Py4JProperties.class})
 public class Py4JConfig {
-    /**
-     * Creates and starts a Py4J gateway server bean.
-     * The gateway server allows Python code to access Java objects through the Py4J bridge.
-     * 
-     * <p>If logging is enabled in the properties, all Py4J logging is turned on.</p>
-     *
-     * @param py4JProperties Configuration properties for the Py4J gateway
-     * @return A started GatewayServer instance
-     */
     @Bean
+    @ConditionalOnMissingBean(GatewayServer.class)
     public GatewayServer py4JGatewayServer(Py4JProperties py4JProperties) {
         if (py4JProperties.loggable()) GatewayServer.turnAllLoggingOn();
-        GatewayServer gatewayServer = Py4JUtil.createGatewayServer(null, py4JProperties);
-        gatewayServer.start();
-        return gatewayServer;
+        try {
+            GatewayServer gatewayServer = new GatewayServer(null,
+                    py4JProperties.port(),
+                    InetAddress.getByName(py4JProperties.host()),
+                    py4JProperties.connectTimeout(),
+                    py4JProperties.readTimeout(),
+                    null,
+                    new CallbackClient(py4JProperties.pythonPort(), InetAddress.getByName(py4JProperties.host())),
+                    ServerSocketFactory.getDefault());
+            gatewayServer.start();
+            return gatewayServer;
+        } catch (UnknownHostException e) {
+            throw new GatewayCreationException(e);
+        }
+    }
+
+    @Bean
+    @Conditional(Py4JResolverCondition.class)
+    public PythonResolver py4JResolver(Py4JProperties py4JProperties, PythonFileHandler pythonFileHandler) {
+        return new Py4JResolver(py4JProperties, pythonFileHandler);
     }
 }

@@ -1,7 +1,7 @@
 package io.w4t3rcs.python.util;
 
-import io.w4t3rcs.python.executor.PythonExecutor;
-import io.w4t3rcs.python.resolver.PythonResolver;
+import io.w4t3rcs.python.metadata.PythonParam;
+import io.w4t3rcs.python.processor.PythonProcessor;
 import lombok.experimental.UtilityClass;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -27,18 +27,17 @@ public class AspectUtil {
      *
      * @param <T> The type of annotation
      * @param joinPoint The join point representing the intercepted method call
+     * @param pythonProcessor The processor responsible for resolving and running Python scripts
      * @param annotationClass The class of the annotation to look for
-     * @param pythonExecutor The executor responsible for running Python scripts
      * @param scriptGetter A function that extracts the script path or content from the annotation
      * @param argumentsGetter A function that extracts arguments from the join point
-     * @param pythonResolvers Variable number of resolvers to process the script before execution
      */
-    public <T extends Annotation> void handlePythonAnnotation(JoinPoint joinPoint, Class<? extends T> annotationClass, PythonExecutor pythonExecutor, Function<T, String> scriptGetter, Function<JoinPoint, Map<String, Object>> argumentsGetter, PythonResolver... pythonResolvers) {
+    public <T extends Annotation> void handlePythonAnnotation(JoinPoint joinPoint, PythonProcessor pythonProcessor, Class<? extends T> annotationClass, Function<T, String> scriptGetter, Function<JoinPoint, Map<String, Object>> argumentsGetter) {
         Method method = getMethod(joinPoint);
         T annotation = method.getAnnotation(annotationClass);
         String script = scriptGetter.apply(annotation);
         Map<String, Object> arguments = argumentsGetter.apply(joinPoint);
-        PythonUtil.executeScript(script, null, pythonExecutor, arguments, pythonResolvers);
+        pythonProcessor.process(script, null, arguments);
     }
 
     /**
@@ -54,16 +53,13 @@ public class AspectUtil {
 
     /**
      * Extracts method parameters from a join point and creates a map of parameter names to values.
-     * If a parameter is annotated with the specified annotation, the name from the annotation is used.
+     * If a parameter is annotated with the {@link PythonParam}, the name from the annotation is used.
      * Otherwise, the parameter's actual name is used.
      *
-     * @param <T> The type of annotation
      * @param joinPoint The join point representing the intercepted method call
-     * @param annotationClass The class of the annotation to look for on parameters
-     * @param annotatedNameGetter A function that extracts the parameter name from the annotation
      * @return A map of parameter names to their values
      */
-    public <T extends Annotation> Map<String, Object> getMethodParameters(JoinPoint joinPoint, Class<? extends T> annotationClass, Function<T, String> annotatedNameGetter) {
+    public Map<String, Object> getMethodParameters(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         Parameter[] parameters = method.getParameters();
@@ -71,9 +67,9 @@ public class AspectUtil {
         Map<String, Object> map = new HashMap<>();
         for (int i = 0; i < parameters.length; i++) {
             Parameter parameter = parameters[i];
-            if (parameter.isAnnotationPresent(annotationClass)) {
-                T annotation = parameter.getAnnotation(annotationClass);
-                String value = annotatedNameGetter.apply(annotation);
+            if (parameter.isAnnotationPresent(PythonParam.class)) {
+                PythonParam annotation = parameter.getAnnotation(PythonParam.class);
+                String value = annotation.value();
                 map.put(value, objects[i]);
             } else {
                 String parameterName = parameter.getName();

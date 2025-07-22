@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.core.type.StandardMethodMetadata;
-import py4j.GatewayServer;
 
 import java.util.Arrays;
 
@@ -20,11 +19,8 @@ import java.util.Arrays;
  * <p>The condition also verifies that the Py4J library is available on the classpath.</p>
  */
 public class Py4JCondition implements Condition {
-    /**
-     * The property name in application properties that can be used to enable Py4J integration.
-     * Setting this property to "true" will enable Py4J integration.
-     */
-    public static final String ENABLED_PROPERTY = "spring.python.py4j.enabled";
+    private static final String PY4J_ENABLED_PROPERTY = "spring.python.py4j.enabled";
+    private static final String GATEWAY_SERVER_CLASS_NAME = "py4j.GatewayServer";
 
     /**
      * Determines if the condition matches, which means Py4J integration should be enabled.
@@ -46,9 +42,9 @@ public class Py4JCondition implements Condition {
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         try {
-            Class.forName(GatewayServer.class.getName(), false, this.getClass().getClassLoader());
+            Class.forName(GATEWAY_SERVER_CLASS_NAME, false, this.getClass().getClassLoader());
             Environment environment = context.getEnvironment();
-            String property = environment.getProperty(ENABLED_PROPERTY, "false");
+            String property = environment.getProperty(PY4J_ENABLED_PROPERTY, "false");
             boolean isEnabledViaProperty = Boolean.parseBoolean(property);
             BeanDefinitionRegistry registry = context.getRegistry();
             boolean isEnabledViaAnnotation = Arrays.stream(registry.getBeanDefinitionNames())

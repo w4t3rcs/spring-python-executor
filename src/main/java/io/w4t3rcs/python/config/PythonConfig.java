@@ -18,7 +18,11 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  */
 @Configuration
 @EnableAspectJAutoProxy
-@EnableConfigurationProperties({PythonProperties.class, SpelythonProperties.class, ResultProperties.class})
+@EnableConfigurationProperties({
+        PythonProperties.class,
+        SpelythonProperties.class,
+        ResultProperties.class
+})
 @ComponentScan("io.w4t3rcs.python")
 public class PythonConfig {
 }

@@ -9,9 +9,7 @@ import java.lang.annotation.Target;
  * Annotation to execute a Python script before a method.
  * 
  * <p>When a method is annotated with {@code PythonBefore}, the specified Python script
- * will be executed before the method is called. Unlike {@link Py4JBefore}, this annotation
- * does not use the Py4J bridge, so the Python script cannot directly interact with
- * Java objects.</p>
+ * will be executed before the method is called.</p>
  * 
  * <p>Example usage:</p>
  * <pre>

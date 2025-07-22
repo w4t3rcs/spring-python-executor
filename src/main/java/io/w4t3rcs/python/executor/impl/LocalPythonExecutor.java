@@ -1,24 +1,22 @@
 package io.w4t3rcs.python.executor.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.w4t3rcs.python.exception.PythonProcessExecutionException;
+import io.w4t3rcs.python.exception.PythonScriptExecutionException;
 import io.w4t3rcs.python.executor.PythonExecutor;
 import io.w4t3rcs.python.process.ProcessFinisher;
 import io.w4t3rcs.python.process.ProcessHandler;
 import io.w4t3rcs.python.process.ProcessStarter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 /**
- * Implementation of the {@link PythonExecutor} interface that executes Python scripts.
+ * Implementation of the {@link PythonExecutor} interface that executes Python scripts locally.
  * This class coordinates the process of starting a Python process, handling its input
  * and error streams, and converting the result to the specified Java type.
  */
 @Slf4j
-@Service
 @RequiredArgsConstructor
-public class PythonExecutorImpl implements PythonExecutor {
+public class LocalPythonExecutor implements PythonExecutor {
     private final ProcessStarter processStarter;
     private final ProcessHandler<String> inputProcessHandler;
     private final ProcessHandler<Void> errorProcessHandler;
@@ -35,7 +33,7 @@ public class PythonExecutorImpl implements PythonExecutor {
             processFinisher.finish(process);
             return jsonResult != null ? objectMapper.readValue(jsonResult, resultClass) : null;
         } catch (Exception e) {
-            throw new PythonProcessExecutionException(e);
+            throw new PythonScriptExecutionException(e);
         }
     }
 }

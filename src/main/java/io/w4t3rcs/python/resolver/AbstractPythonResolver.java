@@ -1,8 +1,8 @@
-package io.w4t3rcs.python.util;
+package io.w4t3rcs.python.resolver;
 
-import io.w4t3rcs.python.executor.PythonExecutor;
-import io.w4t3rcs.python.resolver.PythonResolver;
-import lombok.experimental.UtilityClass;
+import io.w4t3rcs.python.file.PythonFileHandler;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -10,37 +10,41 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Utility class providing helper methods for Python script processing and execution.
- * This class contains methods for executing Python scripts with resolvers and
- * manipulating script content using regular expressions.
+ * Abstract class defining the contract for resolving Python scripts.
+ * Implementations of this interface process Python scripts before execution,
+ * applying transformations or resolving expressions within the script.
  */
-@UtilityClass
-public class PythonUtil {
+public abstract class AbstractPythonResolver implements PythonResolver {
     /**
      * Constant for a Python JSON import statement.
      * This string is automatically added to Python scripts that need JSON functionality.
      */
-    public static final String IMPORT_JSON = "import json\n";
+    protected static final String IMPORT_JSON = "import json\n";
+    @Getter(AccessLevel.PROTECTED)
+    private final PythonFileHandler pythonFileHandler;
+
+    protected AbstractPythonResolver(PythonFileHandler pythonFileHandler) {
+        this.pythonFileHandler = pythonFileHandler;
+    }
+
+    @Override
+    public String resolve(String script, Map<String, Object> arguments) {
+        String result = script;
+        if (this.getPythonFileHandler().isPythonFile(script)) {
+            result = this.getPythonFileHandler().readScriptBodyFromFile(script);
+        }
+        return handleResolve(result, arguments);
+    }
 
     /**
-     * Executes a Python script after processing it through a series of resolvers.
+     * Processes a Python script, applying transformations or resolving expressions.
+     * It is used in {@link AbstractPythonResolver}.resolve(...) method as main behavior descriptor
      *
-     * @param <R> The type of result expected from the script execution
-     * @param script The Python script to execute
-     * @param resultClass The class representing the expected result type
-     * @param pythonExecutor The executor responsible for running the Python script
-     * @param arguments A map of arguments to be used by resolvers
-     * @param pythonResolvers Variable number of resolvers to process the script before execution
-     * @return The result of the script execution, cast to the specified result class
+     * @param script The Python script content or file path to process
+     * @param arguments A map of variables that may be used during resolution
+     * @return The processed script after applying transformations
      */
-    public <R> R executeScript(String script, Class<? extends R> resultClass, PythonExecutor pythonExecutor, Map<String, Object> arguments, PythonResolver... pythonResolvers) {
-        String result = script;
-        for (PythonResolver pythonResolver : pythonResolvers) {
-            result = pythonResolver.resolve(result, arguments);
-        }
-
-        return pythonExecutor.execute(result, resultClass);
-    }
+    protected abstract String handleResolve(String script, Map<String, Object> arguments);
 
     /**
      * Replaces fragments in a Python script that match a given regular expression pattern.
@@ -54,7 +58,7 @@ public class PythonUtil {
      * @param bodyMapper A function that transforms the matched expression string
      * @return The processed script with replaced fragments
      */
-    public String replaceScriptFragments(String script, String regex, int positionFromStart, int positionFromEnd, BiFunction<Matcher, String, String> bodyMapper) {
+    protected String replaceScriptFragments(String script, String regex, int positionFromStart, int positionFromEnd, BiFunction<Matcher, String, String> bodyMapper) {
         StringBuilder resolvedScript = new StringBuilder(script);
         if (!script.contains(IMPORT_JSON)) resolvedScript.insert(0, IMPORT_JSON);
         Pattern spelPattern = Pattern.compile(regex);

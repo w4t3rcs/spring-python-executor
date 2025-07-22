@@ -5,16 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.w4t3rcs.python.config.SpelythonProperties;
 import io.w4t3rcs.python.exception.SpelythonProcessingException;
 import io.w4t3rcs.python.file.PythonFileHandler;
-import io.w4t3rcs.python.resolver.PythonResolver;
-import io.w4t3rcs.python.util.PythonUtil;
-import lombok.RequiredArgsConstructor;
+import io.w4t3rcs.python.resolver.AbstractPythonResolver;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -25,21 +22,16 @@ import java.util.Map;
  * 
  * <p>The resolver can process both inline scripts and scripts loaded from files.</p>
  */
-@Service("spelythonResolver")
-@RequiredArgsConstructor
-public class SpelythonResolver implements PythonResolver {
+public class SpelythonResolver extends AbstractPythonResolver {
     private final SpelythonProperties spelythonProperties;
-    private final PythonFileHandler pythonFileHandler;
     private final ApplicationContext applicationContext;
     private final ObjectMapper objectMapper;
 
-    @Override
-    public String resolve(String script, Map<String, Object> arguments) {
-        if (pythonFileHandler.isPythonFile(script)) {
-            return pythonFileHandler.readScriptBodyFromFile(script, scriptLine -> resolveSpELExpressions(scriptLine, arguments));
-        } else {
-            return resolveSpELExpressions(script, arguments);
-        }
+    public SpelythonResolver(SpelythonProperties spelythonProperties, PythonFileHandler pythonFileHandler, ApplicationContext context, ObjectMapper objectMapper) {
+        super(pythonFileHandler);
+        this.spelythonProperties = spelythonProperties;
+        this.applicationContext = context;
+        this.objectMapper = objectMapper;
     }
 
     /**
@@ -55,7 +47,8 @@ public class SpelythonResolver implements PythonResolver {
      * @return The processed script with SpEL expressions replaced by their evaluated JSON values
      * @throws SpelythonProcessingException If there's an error processing the JSON result
      */
-    private String resolveSpELExpressions(String script, Map<String, Object> arguments) {
+    @Override
+    protected String handleResolve(String script, Map<String, Object> arguments) {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext context = new StandardEvaluationContext();
         if (arguments != null && !arguments.isEmpty()) {
@@ -64,7 +57,7 @@ public class SpelythonResolver implements PythonResolver {
                             .setValue(context, value));
         }
         context.setBeanResolver(new BeanFactoryResolver(applicationContext));
-        return PythonUtil.replaceScriptFragments(script, spelythonProperties.regex(),
+        return this.replaceScriptFragments(script, spelythonProperties.regex(),
                 spelythonProperties.spelPositionFromStart(), spelythonProperties.spelPositionFromEnd(),
                 ((matcher, fragment) -> {
                     try {

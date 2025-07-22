@@ -78,7 +78,7 @@ Add the following dependency to your `pom.xml`:
 <dependency>
     <groupId>io.github.w4t3rcs</groupId>
     <artifactId>spring-boot-python-executor</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.0-alpha-2</version>
 </dependency>
 ```
 
@@ -87,7 +87,7 @@ Add the following dependency to your `pom.xml`:
 Add the following to your `build.gradle`:
 
 ```groovy
-implementation 'io.github.w4t3rcs:spring-boot-python-executor:1.2.0'
+implementation 'io.github.w4t3rcs:spring-boot-python-executor:1.2.0-alpha-2'
 ```
 
 ### Verifying Installation

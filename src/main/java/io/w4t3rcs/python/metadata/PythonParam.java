@@ -1,20 +1,22 @@
 package io.w4t3rcs.python.metadata;
 
+import io.w4t3rcs.python.resolver.impl.SpelythonResolver;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to specify a name for a method parameter to be used in SpEL expressions in Python scripts.
+ * Annotation to specify a name for a method parameter to be used in Python scripts.
  * 
- * <p>When a parameter is annotated with {@code SpelythonParam}, the specified name can be used
- * to reference the parameter's value in SpEL expressions within Python scripts executed by
- * {@link SpelythonBefore} or {@link SpelythonAfter} annotations.</p>
+ * <p>When a parameter is annotated with {@code PythonParam}, the specified name can be used
+ * to reference the parameter's value, for example, in SpEL expressions within Python scripts executed by
+ * {@link PythonBefore} or {@link PythonAfter} annotations using {@link SpelythonResolver}.</p>
  * 
  * <p>Example usage:</p>
  * <pre>
- * &#64;SpelythonAfter("my_script.py")
+ * &#64;PythonAfter("my_script.py")
  * public void myMethod(@SpelythonParam("userId") Long id, @SpelythonParam("userName") String name) {
  *     // Method implementation
  * }
@@ -31,9 +33,9 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-public @interface SpelythonParam {
+public @interface PythonParam {
     /**
-     * The name to use for the parameter in SpEL expressions.
+     * The name to use for the parameter.
      * If not specified, the parameter's actual name will be used.
      * 
      * @return the name for the parameter

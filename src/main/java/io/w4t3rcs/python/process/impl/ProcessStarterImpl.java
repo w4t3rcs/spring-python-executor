@@ -1,6 +1,6 @@
 package io.w4t3rcs.python.process.impl;
 
-import io.w4t3rcs.python.config.PythonProperties;
+import io.w4t3rcs.python.config.PythonExecutorProperties;
 import io.w4t3rcs.python.exception.ProcessStartException;
 import io.w4t3rcs.python.file.PythonFileHandler;
 import io.w4t3rcs.python.process.ProcessStarter;
@@ -19,18 +19,19 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class ProcessStarterImpl implements ProcessStarter {
-    private final PythonProperties pythonProperties;
+    private static final String COMMAND_HEADER = "-c";
+    private final PythonExecutorProperties executorProperties;
     private final PythonFileHandler pythonFileHandler;
 
     @Override
     public Process start(String command) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder();
-            String startCommand = pythonProperties.startCommand();
+            String startCommand = executorProperties.local().startCommand();
             if (pythonFileHandler.isPythonFile(command)) {
                 processBuilder.command(startCommand, pythonFileHandler.getScriptPath(command).toString());
             } else {
-                processBuilder.command(startCommand, "-c", command);
+                processBuilder.command(startCommand, COMMAND_HEADER, command);
             }
 
             log.info("Python script is going to be executed");
