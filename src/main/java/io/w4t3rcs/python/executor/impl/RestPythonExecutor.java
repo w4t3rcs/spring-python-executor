@@ -20,6 +20,10 @@ import java.net.http.HttpResponse;
 @Slf4j
 @RequiredArgsConstructor
 public class RestPythonExecutor implements PythonExecutor {
+    private static final String CONTENT_TYPE_HEADER = "Content-Type";
+    private static final String JSON_CONTENT_TYPE = "application/json";
+    private static final String USERNAME_HEADER = "X-Username";
+    private static final String PASSWORD_HEADER = "X-Password";
     private final PythonExecutorProperties executorProperties;
     private final ObjectMapper objectMapper;
 
@@ -30,6 +34,9 @@ public class RestPythonExecutor implements PythonExecutor {
             PythonExecutorProperties.RestProperties restProperties = executorProperties.rest();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(restProperties.uri()))
+                    .header(CONTENT_TYPE_HEADER, JSON_CONTENT_TYPE)
+                    .header(USERNAME_HEADER, restProperties.username())
+                    .header(PASSWORD_HEADER, restProperties.password())
                     .POST(HttpRequest.BodyPublishers.ofString(script))
                     .build();
             HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();

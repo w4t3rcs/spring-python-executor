@@ -1,9 +1,6 @@
 package io.w4t3rcs.python.config;
 
 import io.w4t3rcs.python.exception.GatewayCreationException;
-import io.w4t3rcs.python.file.PythonFileHandler;
-import io.w4t3rcs.python.resolver.PythonResolver;
-import io.w4t3rcs.python.resolver.impl.Py4JResolver;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -46,11 +43,5 @@ public class Py4JConfig {
         } catch (UnknownHostException e) {
             throw new GatewayCreationException(e);
         }
-    }
-
-    @Bean
-    @Conditional(Py4JResolverCondition.class)
-    public PythonResolver py4JResolver(Py4JProperties py4JProperties, PythonFileHandler pythonFileHandler) {
-        return new Py4JResolver(py4JProperties, pythonFileHandler);
     }
 }

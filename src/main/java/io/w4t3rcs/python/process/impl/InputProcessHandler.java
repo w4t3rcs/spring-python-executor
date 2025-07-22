@@ -1,7 +1,7 @@
 package io.w4t3rcs.python.process.impl;
 
-import io.w4t3rcs.python.config.PythonProperties;
-import io.w4t3rcs.python.config.ResultProperties;
+import io.w4t3rcs.python.config.PythonExecutorProperties;
+import io.w4t3rcs.python.config.PythonResolverProperties;
 import io.w4t3rcs.python.exception.PythonReadingException;
 import io.w4t3rcs.python.process.ProcessHandler;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +23,13 @@ import java.util.concurrent.atomic.AtomicReference;
 @Service
 @RequiredArgsConstructor
 public class InputProcessHandler implements ProcessHandler<String> {
-    private final PythonProperties pythonProperties;
-    private final ResultProperties resultProperties;
+    private final PythonExecutorProperties executorProperties;
+    private final PythonResolverProperties resolverProperties;
 
     @Override
     public String handle(Process process) {
+        var localProperties = executorProperties.local();
+        var resultProperties = resolverProperties.result();
         AtomicReference<String> result = new AtomicReference<>();
         try (BufferedReader bufferedReader = process.inputReader()) {
             bufferedReader.lines().forEach(line -> {
@@ -35,7 +37,7 @@ public class InputProcessHandler implements ProcessHandler<String> {
                     String resultJson = line.replace(resultProperties.appearance(), "");
                     result.set(resultJson);
                 }
-                if (pythonProperties.loggable()) {
+                if (localProperties.loggable()) {
                     log.info(line);
                 }
             });

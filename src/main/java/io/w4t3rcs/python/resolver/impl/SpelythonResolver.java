@@ -2,12 +2,13 @@ package io.w4t3rcs.python.resolver.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.w4t3rcs.python.config.SpelythonProperties;
+import io.w4t3rcs.python.config.PythonResolverProperties;
 import io.w4t3rcs.python.exception.SpelythonProcessingException;
-import io.w4t3rcs.python.file.PythonFileHandler;
 import io.w4t3rcs.python.resolver.AbstractPythonResolver;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.core.annotation.Order;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -22,17 +23,12 @@ import java.util.Map;
  * 
  * <p>The resolver can process both inline scripts and scripts loaded from files.</p>
  */
+@Order(1)
+@RequiredArgsConstructor
 public class SpelythonResolver extends AbstractPythonResolver {
-    private final SpelythonProperties spelythonProperties;
+    private final PythonResolverProperties resolverProperties;
     private final ApplicationContext applicationContext;
     private final ObjectMapper objectMapper;
-
-    public SpelythonResolver(SpelythonProperties spelythonProperties, PythonFileHandler pythonFileHandler, ApplicationContext context, ObjectMapper objectMapper) {
-        super(pythonFileHandler);
-        this.spelythonProperties = spelythonProperties;
-        this.applicationContext = context;
-        this.objectMapper = objectMapper;
-    }
 
     /**
      * Processes a script to find and evaluate SpEL expressions, replacing them with their
@@ -48,27 +44,33 @@ public class SpelythonResolver extends AbstractPythonResolver {
      * @throws SpelythonProcessingException If there's an error processing the JSON result
      */
     @Override
-    protected String handleResolve(String script, Map<String, Object> arguments) {
+    public String resolve(String script, Map<String, Object> arguments) {
+        StringBuilder resolvedScript = new StringBuilder(script);
+        this.insertUniqueLineToStart(resolvedScript, AbstractPythonResolver.IMPORT_JSON);
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext context = new StandardEvaluationContext();
+        var spelythonProperties = resolverProperties.spelython();
+        var spelProperties = spelythonProperties.spel();
         if (arguments != null && !arguments.isEmpty()) {
             arguments.forEach((key, value) ->
-                    parser.parseExpression(spelythonProperties.spelLocalVariableIndex() + key)
+                    parser.parseExpression(spelProperties.localVariableIndex() + key)
                             .setValue(context, value));
         }
         context.setBeanResolver(new BeanFactoryResolver(applicationContext));
-        return this.replaceScriptFragments(script, spelythonProperties.regex(),
-                spelythonProperties.spelPositionFromStart(), spelythonProperties.spelPositionFromEnd(),
-                ((matcher, fragment) -> {
+        this.replaceScriptFragments(resolvedScript, spelythonProperties.regex(),
+                spelProperties.positionFromStart(), spelProperties.positionFromEnd(),
+                ((matcher, fragment, result) -> {
                     try {
-                        Expression expression = parser.parseExpression(fragment);
-                        Object result = expression.getValue(context, Object.class);
-                        String jsonResult = objectMapper.writeValueAsString(result);
-                        String jsonPythonObject = "'" + jsonResult + "'";
-                        return "json.loads(" + jsonPythonObject.replace("\"", "\"\"") + ")";
+                        Expression expression = parser.parseExpression(fragment.toString());
+                        Object expressionValue = expression.getValue(context, Object.class);
+                        String jsonResult = objectMapper.writeValueAsString(expressionValue);
+                        return result.append("json.loads('")
+                                .append(jsonResult.replace("\"", "\"\""))
+                                .append("')");
                     } catch (JsonProcessingException e) {
                         throw new SpelythonProcessingException(e);
                     }
                 }));
+        return resolvedScript.toString();
     }
 }

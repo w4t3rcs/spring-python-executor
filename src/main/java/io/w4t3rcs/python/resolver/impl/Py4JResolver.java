@@ -1,9 +1,10 @@
 package io.w4t3rcs.python.resolver.impl;
 
 import io.w4t3rcs.python.config.Py4JCondition;
-import io.w4t3rcs.python.config.Py4JProperties;
-import io.w4t3rcs.python.file.PythonFileHandler;
+import io.w4t3rcs.python.config.PythonResolverProperties;
 import io.w4t3rcs.python.resolver.AbstractPythonResolver;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 
 import java.util.Map;
 
@@ -16,16 +17,17 @@ import java.util.Map;
  * 
  * <p>This resolver is conditionally enabled based on the {@link Py4JCondition}.</p>
  */
+@Order(2)
+@RequiredArgsConstructor
 public class Py4JResolver extends AbstractPythonResolver {
-    private final Py4JProperties py4JProperties;
-
-    public Py4JResolver(Py4JProperties py4JProperties, PythonFileHandler pythonFileHandler) {
-        super(pythonFileHandler);
-        this.py4JProperties = py4JProperties;
-    }
+    private final PythonResolverProperties resolverProperties;
 
     @Override
-    protected String handleResolve(String script, Map<String, Object> arguments) {
-        return py4JProperties.importLine() + script;
+    public String resolve(String script, Map<String, Object> arguments) {
+        StringBuilder resolvedScript = new StringBuilder(script);
+        var py4JProperties = resolverProperties.py4j();
+        this.insertUniqueLineToStart(resolvedScript, py4JProperties.gateway());
+        this.insertUniqueLineToStart(resolvedScript, py4JProperties.importLine());
+        return resolvedScript.toString();
     }
 }

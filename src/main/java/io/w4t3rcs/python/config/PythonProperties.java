@@ -10,6 +10,5 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  * <p>Properties are bound from the application configuration using the prefix "spring.python".</p>
  */
 @ConfigurationProperties("spring.python")
-public record PythonProperties(@DefaultValue("true") boolean loggable,
-                               @DefaultValue("/python/") String path) {
+public record PythonProperties(@DefaultValue("/python/") String path) {
 }

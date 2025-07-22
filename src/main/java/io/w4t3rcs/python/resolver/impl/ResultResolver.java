@@ -1,8 +1,9 @@
 package io.w4t3rcs.python.resolver.impl;
 
-import io.w4t3rcs.python.config.ResultProperties;
-import io.w4t3rcs.python.file.PythonFileHandler;
+import io.w4t3rcs.python.config.PythonResolverProperties;
 import io.w4t3rcs.python.resolver.AbstractPythonResolver;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 
 import java.util.Map;
 
@@ -13,13 +14,10 @@ import java.util.Map;
  * 
  * <p>The resolver can process both inline scripts and scripts loaded from files.</p>
  */
+@Order(4)
+@RequiredArgsConstructor
 public class ResultResolver extends AbstractPythonResolver {
-    private final ResultProperties resultProperties;
-
-    public ResultResolver(ResultProperties resultProperties, PythonFileHandler pythonFileHandler) {
-        super(pythonFileHandler);
-        this.resultProperties = resultProperties;
-    }
+    private final PythonResolverProperties resolverProperties;
 
     /**
      * Processes a script to find result expressions and wraps them in print statements.
@@ -29,13 +27,28 @@ public class ResultResolver extends AbstractPythonResolver {
      * identifiable in the output.</p>
      *
      * @param script The Python script content to process
+     * @param arguments A map of variables that may be used during resolution, however, they are not used here.
      * @return The processed script with result expressions wrapped in print statements
      */
     @Override
-    protected String handleResolve(String script, Map<String, Object> arguments) {
-        return this.replaceScriptFragments(script, resultProperties.regex(),
+    public String resolve(String script, Map<String, Object> arguments) {
+        StringBuilder resolvedScript = new StringBuilder(script);
+        this.insertUniqueLineToStart(resolvedScript, AbstractPythonResolver.IMPORT_JSON);
+        var resultProperties = resolverProperties.result();
+        this.replaceScriptFragments(resolvedScript, resultProperties.regex(),
                 resultProperties.positionFromStart(), resultProperties.positionFromEnd(),
-                (matcher, fragment) ->
-                        "print('" + resultProperties.appearance() + "' + json.dumps(" + fragment + "))");
+                (matcher, fragment, result) -> {
+            this.appendNextLine(result, builder -> builder.append(resultProperties.appearance())
+                    .append(" = json.dumps(")
+                    .append(fragment)
+                    .append(")"));
+            this.appendNextLine(result, builder -> builder.append("print('")
+                    .append(resultProperties.appearance())
+                    .append("' + ")
+                    .append(resultProperties.appearance())
+                    .append(")"));
+            return result;
+        });
+        return resolvedScript.toString();
     }
 }

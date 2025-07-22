@@ -11,7 +11,7 @@ public interface PythonResolver {
     /**
      * Processes a Python script, applying transformations or resolving expressions.
      *
-     * @param script The Python script content or file path to process
+     * @param script The Python script content
      * @param arguments A map of variables that may be used during resolution
      * @return The processed script after applying transformations
      */

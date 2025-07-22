@@ -1,13 +1,9 @@
 package io.w4t3rcs.python.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.grpc.ManagedChannel;
 import io.grpc.Metadata;
 import io.grpc.stub.MetadataUtils;
-import io.w4t3rcs.python.executor.PythonExecutor;
-import io.w4t3rcs.python.executor.impl.GrpcPythonExecutor;
 import io.w4t3rcs.python.proto.PythonServiceGrpc;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,14 +18,8 @@ import org.springframework.grpc.client.GrpcChannelFactory;
 @Configuration
 @ConditionalOnProperty(name = "spring.python.executor.type", havingValue = "grpc")
 public class GrpcConfig {
-    private static final String USERNAME_KEY = "username";
-    private static final String PASSWORD_KEY = "password";
-
-    @Bean
-    @ConditionalOnMissingBean(PythonExecutor.class)
-    public PythonExecutor grpcPythonExecutor(PythonServiceGrpc.PythonServiceBlockingStub stub, ObjectMapper objectMapper) {
-        return new GrpcPythonExecutor(stub, objectMapper);
-    }
+    private static final String USERNAME_KEY = "X-Username";
+    private static final String PASSWORD_KEY = "X-Password";
 
     @Bean
     public PythonServiceGrpc.PythonServiceBlockingStub stub(PythonExecutorProperties properties, GrpcChannelFactory channels) {
@@ -41,7 +31,6 @@ public class GrpcConfig {
         Metadata.Key<String> passwordKey = Metadata.Key.of(PASSWORD_KEY, marshaller);
         headers.put(usernameKey, grpcProperties.username());
         headers.put(passwordKey, grpcProperties.password());
-        return PythonServiceGrpc.newBlockingStub(channel)
-                .withInterceptors(MetadataUtils.newAttachHeadersInterceptor(headers));
+        return PythonServiceGrpc.newBlockingStub(channel).withInterceptors(MetadataUtils.newAttachHeadersInterceptor(headers));
     }
 }
